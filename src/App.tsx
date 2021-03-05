@@ -1,24 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useWeatherAtHomepage } from "./hooks/useWeather";
 
 function App() {
+  const { weather, location } = useWeatherAtHomepage();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <header>Weather app</header>
+      <main>
+        <div>
+          {weather.loading && "Loading..."}
+          {weather.error && weather.error.toString()}
+          {weather.data && JSON.stringify(weather.data)}
+          {location.loading && "Loading..."}
+          {location.error && location.error.toString()}
+          {location.data && JSON.stringify(location.data)}
+        </div>
+      </main>
     </div>
   );
 }
