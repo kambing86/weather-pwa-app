@@ -16,6 +16,13 @@ export const useWeather = () => {
     },
     [setCurrentData]
   );
+  const setPosition = useCallback(
+    (latitude: number, longitude: number) => {
+      setCurrentData(getCurrentWeatherByGeolocation(latitude, longitude));
+    },
+    [setCurrentData]
+  );
+
   useEffect(() => {
     if (currentData.data) {
       const {
@@ -24,26 +31,35 @@ export const useWeather = () => {
       setWeatherData(getAllWeatherDataByGeolocation(lat, lon));
     }
   }, [currentData.data, setWeatherData]);
+
   return {
     weatherData,
-    setCurrentData,
+    isLocationFound: !currentData.error,
     location: currentData.data?.name ?? "",
     setLocation,
+    setPosition,
   };
 };
 
 export const useWeatherAtHomepage = () => {
-  const { weatherData, setCurrentData, location, setLocation } = useWeather();
+  const {
+    weatherData,
+    isLocationFound,
+    location,
+    setLocation,
+    setPosition,
+  } = useWeather();
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
-        setCurrentData(getCurrentWeatherByGeolocation(latitude, longitude));
+        setPosition(latitude, longitude);
       });
     }
-  }, [setCurrentData]);
+  }, [setPosition]);
   return {
     weatherData,
+    isLocationFound,
     location,
     setLocation,
   };
