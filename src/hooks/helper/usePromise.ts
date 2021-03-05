@@ -12,24 +12,25 @@ interface PromiseState<ReturnData> {
 
 function getInitialState<ReturnData>(): PromiseState<ReturnData> {
   return {
-    loading: true,
+    loading: false,
   };
 }
 
 export default function usePromise<ReturnData>(
-  initialPromise?: () => Promise<ReturnData>,
+  initialPromise?: () => Promise<ReturnData>
 ): [
   PromiseState<ReturnData>,
-  React.Dispatch<React.SetStateAction<Promise<ReturnData>>>,
+  React.Dispatch<React.SetStateAction<Promise<ReturnData>>>
 ] {
   const [promise, setPromise] = useState<Promise<ReturnData> | undefined>(
-    initialPromise,
+    initialPromise
   );
   const [state, setState] = useState<PromiseState<ReturnData>>(getInitialState);
   useEffect(() => {
     if (!promise) {
       return;
     }
+    setState({ loading: true });
     let cleanup = false;
     promise.then(
       (data: ReturnData) => {
@@ -41,7 +42,7 @@ export default function usePromise<ReturnData>(
         if (!cleanup) {
           setState({ error, loading: false });
         }
-      },
+      }
     );
     return () => {
       cleanup = true;

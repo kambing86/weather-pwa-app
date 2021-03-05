@@ -1,23 +1,50 @@
-import { useEffect, useState } from "react";
-import { getLocationName } from "../api/getLocation";
-import { getWeatherByGeolocation } from "../api/getWeather";
+import { useCallback, useEffect } from "react";
+import {
+  getCurrentWeatherByCityName,
+  getAllWeatherDataByGeolocation,
+  getCurrentWeatherByGeolocation,
+} from "../api/getWeather";
+import { AllWeatherData, CurrentWeatherData } from "../types/data";
 import usePromise from "./helper/usePromise";
 
+export const useWeather = () => {
+  const [currentData, setCurrentData] = usePromise<CurrentWeatherData>();
+  const [weatherData, setWeatherData] = usePromise<AllWeatherData>();
+  const setLocation = useCallback(
+    (location: string) => {
+      setCurrentData(getCurrentWeatherByCityName(location));
+    },
+    [setCurrentData]
+  );
+  useEffect(() => {
+    if (currentData.data) {
+      const {
+        coord: { lat, lon },
+      } = currentData.data;
+      setWeatherData(getAllWeatherDataByGeolocation(lat, lon));
+    }
+  }, [currentData.data, setWeatherData]);
+  return {
+    weatherData,
+    setCurrentData,
+    location: currentData.data?.name ?? "",
+    setLocation,
+  };
+};
+
 export const useWeatherAtHomepage = () => {
-  const [position, setPosition] = useState<GeolocationPosition>();
-  const [weather, setWeather] = usePromise();
-  const [location, setLocation] = usePromise();
+  const { weatherData, setCurrentData, location, setLocation } = useWeather();
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(setPosition);
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentData(getCurrentWeatherByGeolocation(latitude, longitude));
+      });
     }
-  }, []);
-  useEffect(() => {
-    if (position) {
-      const { latitude, longitude } = position.coords;
-      setWeather(getWeatherByGeolocation(latitude, longitude));
-      setLocation(getLocationName(latitude, longitude));
-    }
-  }, [position, setWeather, setLocation]);
-  return { weather, location };
+  }, [setCurrentData]);
+  return {
+    weatherData,
+    location,
+    setLocation,
+  };
 };
