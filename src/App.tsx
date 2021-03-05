@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useCallback, useState, useRef } from "react";
+import { useFavourite } from "./hooks/useFavourite";
 import { useWeatherAtHomepage } from "./hooks/useWeather";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const clickSearch = useCallback(() => {
     setLocation(searchRef.current);
   }, [setLocation]);
+  const { favouriteList, addFavourite } = useFavourite();
   return (
     <div className="App">
       <header>Weather app</header>
@@ -31,7 +33,13 @@ function App() {
             />
           )}
         </div>
-        <div>{location}</div>
+        <div>
+          {location}
+          {location !== "" &&
+            favouriteList.find((o) => o === location) === undefined && (
+              <button onClick={() => addFavourite(location)}>Favourite</button>
+            )}
+        </div>
       </main>
     </div>
   );
