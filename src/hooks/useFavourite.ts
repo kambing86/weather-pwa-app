@@ -6,7 +6,7 @@ export const useFavourite = () => {
   const [favouriteList, setFavouriteList] = useState<string[]>([]);
   useEffect(() => {
     const favourite = JSON.parse(
-      localStorage.getItem(FAVOURITE_KEY) || "[]"
+      localStorage.getItem(FAVOURITE_KEY) || "[]",
     ) as string[];
     setFavouriteList(favourite);
   }, []);

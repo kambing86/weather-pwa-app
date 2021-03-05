@@ -10,9 +10,9 @@
 
 import { clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
-import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
+import { createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
-import { StaleWhileRevalidate, NetworkFirst } from "workbox-strategies";
+import { NetworkFirst, StaleWhileRevalidate } from "workbox-strategies";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -50,7 +50,7 @@ registerRoute(
     // Return true to signal that we want to use the handler.
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html")
+  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html"),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -67,14 +67,15 @@ registerRoute(
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
     ],
-  })
+  }),
 );
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
+    void self.skipWaiting();
   }
 });
 
@@ -85,5 +86,5 @@ registerRoute(
     url.origin === "http://openweathermap.org",
   new NetworkFirst({
     cacheName: "openweathermap",
-  })
+  }),
 );

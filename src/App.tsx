@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState, useRef } from "react";
+import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { useFavourite } from "./hooks/useFavourite";
 import { useWeatherAtHomepage } from "./hooks/useWeather";
 

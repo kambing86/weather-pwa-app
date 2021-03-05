@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import {
-  getCurrentWeatherByCityName,
   getAllWeatherDataByGeolocation,
+  getCurrentWeatherByCityName,
   getCurrentWeatherByGeolocation,
 } from "../api/getWeather";
 import { AllWeatherData, CurrentWeatherData } from "../types/data";
@@ -14,13 +14,13 @@ export const useWeather = () => {
     (location: string) => {
       setCurrentData(getCurrentWeatherByCityName(location));
     },
-    [setCurrentData]
+    [setCurrentData],
   );
   const setPosition = useCallback(
     (latitude: number, longitude: number) => {
       setCurrentData(getCurrentWeatherByGeolocation(latitude, longitude));
     },
-    [setCurrentData]
+    [setCurrentData],
   );
 
   useEffect(() => {
