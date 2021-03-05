@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useCallback, useEffect } from "react";
 import {
   getAllWeatherDataByGeolocation,
@@ -8,7 +9,10 @@ import { AllWeatherData, CurrentWeatherData } from "../types/data";
 import usePromise from "./helper/usePromise";
 
 export const useWeather = () => {
-  const [currentData, setCurrentData] = usePromise<CurrentWeatherData>();
+  const [currentData, setCurrentData] = usePromise<
+    CurrentWeatherData,
+    AxiosError
+  >();
   const [weatherData, setWeatherData] = usePromise<AllWeatherData>();
   const setLocation = useCallback(
     (location: string) => {
@@ -34,7 +38,7 @@ export const useWeather = () => {
 
   return {
     weatherData,
-    isLocationFound: !currentData.error,
+    isLocationFound: currentData.error?.response?.status !== 404,
     location: currentData.data?.name ?? "",
     setLocation,
     setPosition,

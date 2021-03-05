@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { useFavourite } from "./hooks/useFavourite";
+import { useIsOffline } from "./hooks/useIsOffline";
 import { useWeatherAtHomepage } from "./hooks/useWeather";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
     location,
     setLocation,
   } = useWeatherAtHomepage();
+  const isOffline = useIsOffline();
   const [search, setSearch] = useState("");
   const inputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -27,6 +29,7 @@ function App() {
           <input onChange={inputChange} value={search} />
           <button onClick={clickSearch}>Search</button>
         </div>
+        <div>is offline: {isOffline.toString()}</div>
         {!isLocationFound && <div>Location not found</div>}
         {isLocationFound && (
           <>
