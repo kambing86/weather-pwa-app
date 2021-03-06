@@ -1,63 +1,61 @@
-import React, { ChangeEvent, useCallback, useRef, useState } from "react";
-import { useFavourite } from "./hooks/useFavourite";
-import { useIsOffline } from "./hooks/useIsOffline";
-import { useWeatherAtHomepage } from "./hooks/useWeather";
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import MainLayout from "components/MainLayout";
+import { useAppTheme } from "hooks/useAppTheme";
+import Loading from "pages/Loading";
+import React, { Suspense, useCallback, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { Route, HashRouter as Router, Switch } from "react-router-dom";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyReactComponent = React.ComponentType<any>;
+type ReactComponentLazyFactory = () => Promise<{ default: AnyReactComponent }>;
+const lazyPreloadQueue: ReactComponentLazyFactory[] = [];
+
+// check https://medium.com/hackernoon/lazy-loading-and-preloading-components-in-react-16-6-804de091c82d
+function lazyWithPreload(
+  factory: ReactComponentLazyFactory,
+): React.LazyExoticComponent<AnyReactComponent> {
+  const Component = React.lazy(factory);
+  lazyPreloadQueue.push(factory);
+  return Component;
+}
+
+function preloadAll() {
+  for (const preload of lazyPreloadQueue) {
+    void preload();
+  }
+}
+
+const ErrorPage = lazyWithPreload(() => import("pages/ErrorFallback"));
+const HomePage = lazyWithPreload(() => import("pages/Home"));
+const FavoritePage = lazyWithPreload(() => import("pages/Favorite"));
+const NotFoundPage = lazyWithPreload(() => import("pages/NotFound"));
 
 function App() {
-  const {
-    weatherData,
-    isLocationFound,
-    location,
-    setLocation,
-  } = useWeatherAtHomepage();
-  const isOffline = useIsOffline();
-  const [search, setSearch] = useState("");
-  const inputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
+  const { theme } = useAppTheme();
+  useEffect(() => {
+    setTimeout(preloadAll, 2000);
   }, []);
-  const searchRef = useRef(search);
-  searchRef.current = search;
-  const clickSearch = useCallback(() => {
-    setLocation(searchRef.current);
-  }, [setLocation]);
-  const { favouriteList, addFavourite } = useFavourite();
+  const onResetHandler = useCallback(() => {
+    // reset the state of your app so the error doesn't happen again
+  }, []);
   return (
-    <div className="App">
-      <header>Weather app</header>
-      <main>
-        <div>
-          <input onChange={inputChange} value={search} />
-          <button onClick={clickSearch}>Search</button>
-        </div>
-        <div>is offline: {isOffline.toString()}</div>
-        {!isLocationFound && <div>Location not found</div>}
-        {isLocationFound && (
-          <>
-            <div>
-              {location}
-              {location !== "" &&
-                favouriteList.find((o) => o === location) === undefined && (
-                  <button onClick={() => addFavourite(location)}>
-                    Favourite
-                  </button>
-                )}
-            </div>
-            <div>
-              {weatherData.loading && "Loading..."}
-              {weatherData.error && weatherData.error.toString()}
-              {weatherData.data &&
-                weatherData.data.current.weather[0].description}
-              {weatherData.data && (
-                <img
-                  src={`http://openweathermap.org/img/wn/${weatherData.data.current.weather[0].icon}.png`}
-                  alt={weatherData.data.current.weather[0].description}
-                />
-              )}
-            </div>
-          </>
-        )}
-      </main>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Suspense fallback={<Loading />}>
+        <ErrorBoundary FallbackComponent={ErrorPage} onReset={onResetHandler}>
+          <Router>
+            <MainLayout>
+              <Switch>
+                <Route exact path="/" component={HomePage} />
+                <Route exact path="/favorite" component={FavoritePage} />
+                <Route component={NotFoundPage} />
+              </Switch>
+            </MainLayout>
+          </Router>
+        </ErrorBoundary>
+      </Suspense>
+    </ThemeProvider>
   );
 }
 

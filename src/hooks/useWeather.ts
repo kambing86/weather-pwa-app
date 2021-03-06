@@ -1,12 +1,12 @@
-import { AxiosError } from "axios";
-import { useCallback, useEffect } from "react";
 import {
   getAllWeatherDataByGeolocation,
   getCurrentWeatherByCityName,
   getCurrentWeatherByGeolocation,
-} from "../api/getWeather";
-import { AllWeatherData, CurrentWeatherData } from "../types/data";
-import usePromise from "./helper/usePromise";
+} from "api/getWeather";
+import { AxiosError } from "axios";
+import { useCallback, useEffect } from "react";
+import { AllWeatherData, CurrentWeatherData } from "types/data";
+import usePromise from "./helpers/usePromise";
 
 export const useWeather = () => {
   const [currentData, setCurrentData] = usePromise<

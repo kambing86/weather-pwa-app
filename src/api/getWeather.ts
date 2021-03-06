@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AllWeatherData, CurrentWeatherData } from "../types/data";
+import { AllWeatherData, CurrentWeatherData } from "types/data";
 import { API_KEY } from "./common";
 
 export const getCurrentWeatherByCityName = async (city: string) => {
