@@ -25,6 +25,10 @@ export const themeSlice = createSlice({
       localStorage.setItem(THEME_KEY, newVal);
       state.themeType = newVal;
     },
+    setDark(state) {
+      localStorage.setItem(THEME_KEY, DARK);
+      state.themeType = DARK;
+    },
   },
 });
 

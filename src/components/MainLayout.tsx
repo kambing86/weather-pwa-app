@@ -1,5 +1,8 @@
+import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import Alert from "@material-ui/lab/Alert";
+import { useIsOffline } from "hooks/useIsOffline";
+import React, { useCallback, useEffect, useState } from "react";
 import Copyright from "./Copyright";
 import TopSideBar from "./TopSideBar";
 
@@ -29,6 +32,16 @@ interface Props {
 
 const MainLayout = ({ children }: Props) => {
   const classes = useStyles();
+  const isOffline = useIsOffline();
+  const [seenOffline, setSeenOffline] = useState(false);
+  useEffect(() => {
+    if (!isOffline) {
+      setSeenOffline(false);
+    }
+  }, [isOffline]);
+  const handleClose = useCallback(() => {
+    setSeenOffline(true);
+  }, []);
   return (
     <div className={classes.root}>
       <TopSideBar />
@@ -40,6 +53,24 @@ const MainLayout = ({ children }: Props) => {
         <footer className={classes.footer}>
           <Copyright />
         </footer>
+        <Snackbar open={!seenOffline && isOffline}>
+          <Alert
+            onClose={handleClose}
+            elevation={6}
+            variant="filled"
+            severity="warning"
+          >
+            You are offline, so data may not found or outdated.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={seenOffline && isOffline}
+        >
+          <Alert elevation={6} variant="filled" severity="warning">
+            Offline
+          </Alert>
+        </Snackbar>
       </main>
     </div>
   );

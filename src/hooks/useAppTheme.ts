@@ -54,10 +54,10 @@ export const useAppTheme = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const themeType = useThemeType();
   const [theme, setTheme] = useState(getTheme(themeType));
-  // if localStorage has no saved theme type, then set using media query
+  // if localStorage has no saved theme type, then set dark using media query
   useEffect(() => {
     if (!prefersDarkMode || themeType !== null) return;
-    themeActions.toggleTheme();
+    themeActions.setDark();
   }, [prefersDarkMode, themeType]);
   useEffect(() => {
     if (themeType === DARK) {
