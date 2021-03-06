@@ -2,6 +2,7 @@
   "name": "weather-pwa-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kambing86.github.io/weather-pwa-app/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -37,7 +38,9 @@
     "prettier": "prettier --check 'src/**/*.*'",
     "prettier:write": "prettier --write 'src/**/*.*'",
     "lint": "eslint 'src/**/*.{j,t}s{,x}'",
-    "lint:fix": "eslint --fix 'src/**/*.{j,t}s{,x}'"
+    "lint:fix": "eslint --fix 'src/**/*.{j,t}s{,x}'",
+    "preserve": "rimraf build && rimraf weather-pwa-app && yarn build && mv build weather-pwa-app",
+    "serve": "npx open-cli http://localhost:5000/weather-pwa-app/ && npx serve"
   },
   "eslintConfig": {
     "extends": [
