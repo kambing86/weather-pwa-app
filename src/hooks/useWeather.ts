@@ -1,46 +1,30 @@
-import {
-  getAllWeatherDataByGeolocation,
-  getCurrentWeatherByCityName,
-  getCurrentWeatherByGeolocation,
-} from "api/getWeather";
-import { AxiosError } from "axios";
 import { useCallback, useEffect } from "react";
-import { AllWeatherData, CurrentWeatherData } from "types/data";
-import usePromise from "./helpers/usePromise";
+import { weatherThunkActions } from "store/actions/weather";
+import {
+  useAllWeatherData,
+  useCurrentWeatherData,
+} from "store/selectors/weather";
 
 export const useWeather = () => {
-  const [currentData, setCurrentData] = usePromise<
-    CurrentWeatherData,
-    AxiosError
-  >();
-  const [weatherData, setWeatherData] = usePromise<AllWeatherData>();
-  const setLocation = useCallback(
-    (location: string) => {
-      setCurrentData(getCurrentWeatherByCityName(location));
-    },
-    [setCurrentData],
-  );
-  const setPosition = useCallback(
-    (latitude: number, longitude: number) => {
-      setCurrentData(getCurrentWeatherByGeolocation(latitude, longitude));
-    },
-    [setCurrentData],
-  );
-
+  const setPosition = useCallback((latitude: number, longitude: number) => {
+    weatherThunkActions.getCurrentDataByGeolocation({ latitude, longitude });
+  }, []);
+  const weatherData = useAllWeatherData();
+  const currentData = useCurrentWeatherData();
   useEffect(() => {
     if (currentData.data) {
       const {
         coord: { lat, lon },
       } = currentData.data;
-      setWeatherData(getAllWeatherDataByGeolocation(lat, lon));
+      weatherThunkActions.getAllData({ latitude: lat, longitude: lon });
     }
-  }, [currentData.data, setWeatherData]);
+  }, [currentData.data]);
 
   return {
     weatherData,
-    isLocationFound: currentData.error?.response?.status !== 404,
+    isLocationFound: currentData.error === undefined,
     location: currentData.data?.name ?? "",
-    setLocation,
+    setLocation: weatherThunkActions.getCurrentDataByCityName,
     setPosition,
   };
 };
