@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
 import { useIsOffline } from "hooks/useIsOffline";
 import React, { useCallback, useEffect, useState } from "react";
+import { useHasUpdate } from "store/selectors/update";
 import Copyright from "./Copyright";
 import TopSideBar from "./TopSideBar";
 
@@ -32,6 +33,7 @@ interface Props {
 
 const MainLayout = ({ children }: Props) => {
   const classes = useStyles();
+  const hasUpdate = useHasUpdate();
   const isOffline = useIsOffline();
   const [seenOffline, setSeenOffline] = useState(false);
   useEffect(() => {
@@ -69,6 +71,14 @@ const MainLayout = ({ children }: Props) => {
         >
           <Alert elevation={6} variant="filled" severity="warning">
             Offline
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={hasUpdate}
+        >
+          <Alert elevation={6} variant="filled" severity="warning">
+            New version detected, please refresh the page to update
           </Alert>
         </Snackbar>
       </main>

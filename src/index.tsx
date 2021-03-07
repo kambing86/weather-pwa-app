@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import store from "store";
+import { updateActions } from "store/actions/update";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
@@ -21,7 +22,7 @@ ReactDOM.render(
 serviceWorkerRegistration.register({
   onUpdate: (registration) => {
     registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-    window.alert("New version detected, please refresh the page to update");
+    updateActions.setHasUpdate(true);
   },
 });
 

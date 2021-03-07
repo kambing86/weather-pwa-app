@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import theme from "./slices/theme";
+import update from "./slices/update";
 
 const store = configureStore({
   reducer: {
     theme,
+    update,
   },
   devTools: {
     name: "weather-pwa-app",
