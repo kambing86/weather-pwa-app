@@ -39,8 +39,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
+  tableTitle: {
+    marginBottom: theme.spacing(1),
+  },
   table: {
-    marginTop: theme.spacing(1),
     minWidth: 200,
     "& $iconBackground": {
       background:
@@ -118,7 +120,9 @@ const WeatherResult = () => {
               </>
             )}
             <Divider className={classes.divider} />
-            <Typography>7 days forecast</Typography>
+            <Typography className={classes.tableTitle}>
+              7 days forecast
+            </Typography>
             <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="simple table">
                 <TableHead>
