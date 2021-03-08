@@ -1,0 +1,40 @@
+language: node_js
+node_js: node
+before_install:
+  - npm install -g yarn
+stages:
+  - quality
+  - test
+  - build
+  - deploy
+cache:
+  - yarn
+  - directories:
+      - ./build
+jobs:
+  include:
+    - stage: quality
+      name: lint
+      script: yarn lint
+    - name: prettier
+      script: yarn prettier
+    - stage: test
+      name: jest
+      script: yarn test
+    - stage: build
+      name: build
+      script: yarn build
+    - stage: deploy
+      name: deploy to github
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        local_dir: ./build
+        keep_history: false
+        verbose: true
+        on:
+          branch: master
+branches:
+  except:
+    - gh-pages
