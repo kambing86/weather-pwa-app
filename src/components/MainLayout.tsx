@@ -1,3 +1,4 @@
+import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
@@ -77,7 +78,20 @@ const MainLayout = ({ children }: Props) => {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           open={hasUpdate}
         >
-          <Alert elevation={6} variant="filled" severity="warning">
+          <Alert
+            elevation={6}
+            variant="filled"
+            severity="warning"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => window.location.reload()}
+              >
+                Restart
+              </Button>
+            }
+          >
             New version detected, please refresh the page to update
           </Alert>
         </Snackbar>
