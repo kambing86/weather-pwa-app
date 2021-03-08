@@ -34,7 +34,7 @@ jobs:
         keep_history: false
         verbose: true
         on:
-          branch: master
+          branch: main
 branches:
   except:
     - gh-pages
