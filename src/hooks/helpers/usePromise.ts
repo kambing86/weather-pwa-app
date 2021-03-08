@@ -7,6 +7,7 @@ a helper hook to resolve promise
 interface PromiseState<ReturnData, ErrorThrown> {
   readonly data?: ReturnData;
   readonly error?: ErrorThrown;
+  readonly init: boolean;
   readonly loading: boolean;
 }
 
@@ -15,6 +16,7 @@ function getInitialState<ReturnData, ErrorThrown>(): PromiseState<
   ErrorThrown
 > {
   return {
+    init: false,
     loading: false,
   };
 }
@@ -35,17 +37,17 @@ export default function usePromise<ReturnData, ErrorThrown = Error>(
     if (!promise) {
       return;
     }
-    setState({ loading: true });
+    setState({ init: true, loading: true });
     let cleanup = false;
     promise.then(
       (data: ReturnData) => {
         if (!cleanup) {
-          setState({ data, loading: false });
+          setState((val) => ({ ...val, data, loading: false }));
         }
       },
       (error: ErrorThrown) => {
         if (!cleanup) {
-          setState({ error, loading: false });
+          setState((val) => ({ ...val, error, loading: false }));
         }
       },
     );

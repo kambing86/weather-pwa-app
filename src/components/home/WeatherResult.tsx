@@ -66,13 +66,22 @@ const useStyles = makeStyles((theme) => ({
 
 const WeatherResult = () => {
   const classes = useStyles();
-  const { weatherData, isLoading, isLocationFound, location } = useWeather();
+  const {
+    weatherData,
+    isInit,
+    isLoading,
+    isLocationFound,
+    location,
+  } = useWeather();
   const { isFavorite, clickFavorite } = useFavorite();
   const currentData = weatherData.data?.current;
   const locationRef = useRefInSync(location);
   const favoriteHandler = useCallback(() => {
     clickFavorite(locationRef.current);
   }, [locationRef, clickFavorite]);
+  if (!isInit) {
+    return null;
+  }
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }

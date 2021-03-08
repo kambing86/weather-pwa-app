@@ -5,6 +5,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import WeatherResult from "components/home/WeatherResult";
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const { isLoading, setLocation } = useWeatherAtHomepage();
+  const { isGettingLocation, setLocation } = useWeatherAtHomepage();
   const [search, setSearch] = useState("");
   const inputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -61,7 +62,8 @@ export default function Home() {
               />
             </FormControl>
           </form>
-          {!isLoading && <WeatherResult />}
+          {isGettingLocation && <Typography>Getting Location...</Typography>}
+          {!isGettingLocation && <WeatherResult />}
         </Grid>
       </Grid>
     </Container>

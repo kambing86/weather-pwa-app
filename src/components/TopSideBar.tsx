@@ -137,11 +137,17 @@ const TopSideBar = () => {
         </div>
         <Divider />
         <List>
-          <SideBarLink path="/" text="Home" icon={<HomeIcon />} />
+          <SideBarLink
+            path="/"
+            text="Home"
+            icon={<HomeIcon />}
+            onClick={handleDrawerClose}
+          />
           <SideBarLink
             path="/favorite"
             text="Favorite"
             icon={<FavoriteIcon />}
+            onClick={handleDrawerClose}
           />
         </List>
       </Drawer>

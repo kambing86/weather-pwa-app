@@ -13,6 +13,7 @@ export const useWeather = () => {
   const currentData = useCurrentWeatherData();
   return {
     weatherData,
+    isInit: currentData.init,
     isLoading:
       !currentData.init ||
       currentData.loading ||
@@ -27,20 +28,26 @@ export const useWeather = () => {
 
 export const useWeatherAtHomepage = () => {
   const { setLocation, setPosition } = useWeather();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isGettingLocation, setIsGettingLocation] = useState(true);
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setIsLoading(false);
-        const { latitude, longitude } = position.coords;
-        setPosition(latitude, longitude);
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setIsGettingLocation(false);
+          const { latitude, longitude } = position.coords;
+          setPosition(latitude, longitude);
+        },
+        () => {
+          setIsGettingLocation(false);
+        },
+        { timeout: 5000 },
+      );
     } else {
-      setIsLoading(false);
+      setIsGettingLocation(false);
     }
   }, [setPosition]);
   return {
-    isLoading,
+    isGettingLocation,
     setLocation,
   };
 };

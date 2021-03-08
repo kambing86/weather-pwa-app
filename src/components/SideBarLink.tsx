@@ -8,13 +8,15 @@ interface Props {
   path: string;
   text: string;
   icon: JSX.Element;
+  onClick?: () => void;
 }
 
-const SideBarLink = ({ path, text, icon }: Props) => {
+const SideBarLink = ({ path, text, icon, onClick }: Props) => {
   const { pushHistory, location } = useRoute();
   const clickHandler = useCallback(() => {
     pushHistory(path);
-  }, [path, pushHistory]);
+    onClick?.();
+  }, [path, pushHistory, onClick]);
   return (
     <ListItem
       button

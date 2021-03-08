@@ -35,6 +35,9 @@ export default function Home() {
                 <ListItemText primary={location} />
               </ListItem>
             ))}
+            {favoriteList.length === 0 && (
+              <ListItem>No favorite, please add location in Home page</ListItem>
+            )}
           </List>
         </Grid>
       </Grid>
