@@ -8,11 +8,13 @@ import {
 export interface ThunkState<ReturnData> {
   readonly data?: ReturnData;
   readonly error?: SerializedError;
+  readonly init: boolean;
   readonly loading: boolean;
 }
 
 export function createInitialThunkState<ReturnData>(): ThunkState<ReturnData> {
   return {
+    init: false,
     loading: false,
   };
 }
@@ -25,6 +27,9 @@ export function handleThunk<State, ReturnData, Args>(
   builder
     .addCase(asyncThunk.pending, (state) => {
       const thunkState = mapFunc(state);
+      thunkState.data = undefined;
+      thunkState.error = undefined;
+      thunkState.init = true;
       thunkState.loading = true;
     })
     .addCase(asyncThunk.fulfilled, (state, action) => {

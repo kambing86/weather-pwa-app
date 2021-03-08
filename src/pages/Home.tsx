@@ -5,11 +5,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
-import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
+import WeatherResult from "components/home/WeatherResult";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
-import { useFavorite } from "hooks/useFavorite";
 import { useWeatherAtHomepage } from "hooks/useWeather";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
@@ -18,12 +17,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
-  },
   input: {
     marginBottom: theme.spacing(4),
   },
@@ -31,12 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const {
-    weatherData,
-    isLocationFound,
-    location,
-    setLocation,
-  } = useWeatherAtHomepage();
+  const { isLoading, setLocation } = useWeatherAtHomepage();
   const [search, setSearch] = useState("");
   const inputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -46,7 +34,6 @@ export default function Home() {
     const searchString = searchRef.current;
     if (searchString !== "") setLocation(searchString);
   }, [searchRef, setLocation]);
-  const { favoriteList, addFavorite } = useFavorite();
   const formSubmitHandler = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
@@ -74,34 +61,7 @@ export default function Home() {
               />
             </FormControl>
           </form>
-          <Paper className={classes.paper}>
-            {!isLocationFound && <div>Location not found</div>}
-            {isLocationFound && (
-              <>
-                <div>
-                  {location}
-                  {location !== "" &&
-                    favoriteList.find((o) => o === location) === undefined && (
-                      <button onClick={() => addFavorite(location)}>
-                        Favorite
-                      </button>
-                    )}
-                </div>
-                <div>
-                  {weatherData.loading && "Loading..."}
-                  {weatherData.error && weatherData.error.toString()}
-                  {weatherData.data &&
-                    weatherData.data.current.weather[0].description}
-                  {weatherData.data && (
-                    <img
-                      src={`http://openweathermap.org/img/wn/${weatherData.data.current.weather[0].icon}.png`}
-                      alt={weatherData.data.current.weather[0].description}
-                    />
-                  )}
-                </div>
-              </>
-            )}
-          </Paper>
+          {!isLoading && <WeatherResult />}
         </Grid>
       </Grid>
     </Container>

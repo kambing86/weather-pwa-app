@@ -1,6 +1,8 @@
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import { useFavorite } from "hooks/useFavorite";
 import React from "react";
@@ -10,11 +12,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
+  list: {
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
@@ -25,11 +24,18 @@ export default function Home() {
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            {favoriteList.map((place) => (
-              <div key={place}>{place}</div>
+          <List component="nav" className={classes.list}>
+            {favoriteList.map((location) => (
+              <ListItem
+                key={location}
+                button
+                component="a"
+                href={`#/location/${location}`}
+              >
+                <ListItemText primary={location} />
+              </ListItem>
             ))}
-          </Paper>
+          </List>
         </Grid>
       </Grid>
     </Container>

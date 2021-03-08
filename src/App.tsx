@@ -29,6 +29,7 @@ function preloadAll() {
 const ErrorPage = lazyWithPreload(() => import("pages/ErrorFallback"));
 const HomePage = lazyWithPreload(() => import("pages/Home"));
 const FavoritePage = lazyWithPreload(() => import("pages/Favorite"));
+const LocationPage = lazyWithPreload(() => import("pages/Location"));
 const NotFoundPage = lazyWithPreload(() => import("pages/NotFound"));
 
 function App() {
@@ -49,6 +50,11 @@ function App() {
               <Switch>
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/favorite" component={FavoritePage} />
+                <Route
+                  exact
+                  path="/location/:location"
+                  component={LocationPage}
+                />
                 <Route component={NotFoundPage} />
               </Switch>
             </MainLayout>

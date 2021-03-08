@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { weatherThunkActions } from "store/actions/weather";
 import {
   useAllWeatherData,
@@ -11,17 +11,13 @@ export const useWeather = () => {
   }, []);
   const weatherData = useAllWeatherData();
   const currentData = useCurrentWeatherData();
-  useEffect(() => {
-    if (currentData.data) {
-      const {
-        coord: { lat, lon },
-      } = currentData.data;
-      weatherThunkActions.getAllData({ latitude: lat, longitude: lon });
-    }
-  }, [currentData.data]);
-
   return {
     weatherData,
+    isLoading:
+      !currentData.init ||
+      currentData.loading ||
+      !weatherData.init ||
+      weatherData.loading,
     isLocationFound: currentData.error === undefined,
     location: currentData.data?.name ?? "",
     setLocation: weatherThunkActions.getCurrentDataByCityName,
@@ -30,25 +26,21 @@ export const useWeather = () => {
 };
 
 export const useWeatherAtHomepage = () => {
-  const {
-    weatherData,
-    isLocationFound,
-    location,
-    setLocation,
-    setPosition,
-  } = useWeather();
+  const { setLocation, setPosition } = useWeather();
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
+        setIsLoading(false);
         const { latitude, longitude } = position.coords;
         setPosition(latitude, longitude);
       });
+    } else {
+      setIsLoading(false);
     }
   }, [setPosition]);
   return {
-    weatherData,
-    isLocationFound,
-    location,
+    isLoading,
     setLocation,
   };
 };

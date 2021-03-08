@@ -2,23 +2,52 @@ import axios from "axios";
 import { AllWeatherData, CurrentWeatherData } from "types/data";
 import { API_KEY } from "./common";
 
+const defaultParams = {
+  units: "metric",
+  appid: API_KEY,
+};
+
 export const getCurrentWeatherByCityName = async (city: string) => {
-  const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
-  return (await axios.get(api)).data as CurrentWeatherData;
+  const api = `https://api.openweathermap.org/data/2.5/weather`;
+  return (
+    await axios.get(api, {
+      params: {
+        ...defaultParams,
+        q: city,
+      },
+    })
+  ).data as CurrentWeatherData;
 };
 
 export const getCurrentWeatherByGeolocation = async (
   latitude: number,
   longitude: number,
 ) => {
-  const api = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
-  return (await axios.get(api)).data as CurrentWeatherData;
+  const api = `https://api.openweathermap.org/data/2.5/weather`;
+  return (
+    await axios.get(api, {
+      params: {
+        ...defaultParams,
+        lat: latitude,
+        lon: longitude,
+      },
+    })
+  ).data as CurrentWeatherData;
 };
 
 export const getAllWeatherDataByGeolocation = async (
   latitude: number,
   longitude: number,
 ) => {
-  const api = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY}`;
-  return (await axios.get(api)).data as AllWeatherData;
+  const api = `https://api.openweathermap.org/data/2.5/onecall`;
+  return (
+    await axios.get(api, {
+      params: {
+        ...defaultParams,
+        lat: latitude,
+        lon: longitude,
+        exclude: "minutely,hourly,alerts",
+      },
+    })
+  ).data as AllWeatherData;
 };

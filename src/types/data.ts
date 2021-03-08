@@ -60,7 +60,7 @@ export interface DailyData {
   weather: WeatherData[];
   clouds: number;
   pop: number;
-  rain: number;
+  rain?: number;
   uvi: number;
 }
 

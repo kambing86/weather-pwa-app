@@ -20,15 +20,24 @@ export const getAllData = createAsyncThunk(
 
 export const getCurrentDataByCityName = createAsyncThunk(
   "weather/getCurrentDataByCityName",
-  async (location: string) => {
-    return await getCurrentWeatherByCityName(location);
+  async (location: string, { dispatch }) => {
+    const currentWeather = await getCurrentWeatherByCityName(location);
+    const { lat: latitude, lon: longitude } = currentWeather.coord;
+    void dispatch(
+      getAllData({
+        latitude,
+        longitude,
+      }),
+    );
+    return currentWeather;
   },
 );
 
 export const getCurrentDataByGeolocation = createAsyncThunk(
   "weather/getCurrentDataByGeolocation",
-  async (coordinate: Coordinate) => {
+  async (coordinate: Coordinate, { dispatch }) => {
     const { latitude, longitude } = coordinate;
+    void dispatch(getAllData(coordinate));
     return await getCurrentWeatherByGeolocation(latitude, longitude);
   },
 );
