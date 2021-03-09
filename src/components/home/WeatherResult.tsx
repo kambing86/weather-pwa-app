@@ -3,13 +3,6 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -18,6 +11,7 @@ import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useFavorite } from "hooks/useFavorite";
 import { useWeather } from "hooks/useWeather";
 import React, { useCallback } from "react";
+import TableDailyData from "./TableDailyData";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,24 +35,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tableTitle: {
     marginBottom: theme.spacing(1),
-  },
-  table: {
-    minWidth: 200,
-    "& $iconBackground": {
-      background:
-        theme.palette.type === "dark"
-          ? "radial-gradient(circle at center, #606060 0, #424242 75%)"
-          : "radial-gradient(circle at center, #CCCCCC 0, #fff 75%)",
-    },
-    "& $weatherText": {
-      justifyContent: "center",
-    },
-    "& .MuiTableCell-root": {
-      padding: theme.spacing(0.5),
-      [theme.breakpoints.up("sm")]: {
-        padding: theme.spacing(2),
-      },
-    },
   },
   weatherText: {
     display: "flex",
@@ -120,51 +96,14 @@ const WeatherResult = () => {
               </>
             )}
             <Divider className={classes.divider} />
-            <Typography className={classes.tableTitle}>
-              7 days forecast
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Date</TableCell>
-                    <TableCell align="center">Weather</TableCell>
-                    <TableCell align="center">Min temp (°C)</TableCell>
-                    <TableCell align="center">Max temp (°C)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {weatherData.data?.daily.map((dailyData) => {
-                    const date = new Date(dailyData.dt * 1000);
-                    const weather = dailyData.weather[0];
-                    return (
-                      <TableRow key={dailyData.dt}>
-                        <TableCell align="center">
-                          {new Intl.DateTimeFormat().format(date)}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          className={classes.weatherText}
-                        >
-                          <img
-                            src={`http://openweathermap.org/img/wn/${weather.icon}.png`}
-                            alt={weather.description}
-                            className={classes.iconBackground}
-                          />
-                          {weather.description}
-                        </TableCell>
-                        <TableCell align="center">
-                          {dailyData.temp.min}
-                        </TableCell>
-                        <TableCell align="center">
-                          {dailyData.temp.max}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            {weatherData.data && (
+              <>
+                <Typography className={classes.tableTitle}>
+                  7 days forecast
+                </Typography>
+                <TableDailyData data={weatherData.data.daily} />
+              </>
+            )}
           </>
         )}
       </CardContent>
