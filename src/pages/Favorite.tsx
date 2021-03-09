@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Home() {
+export default function Favorite() {
   const classes = useStyles();
   const { favoriteList } = useFavorite();
   return (
