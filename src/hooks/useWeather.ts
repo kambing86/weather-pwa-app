@@ -4,6 +4,7 @@ import {
   useAllWeatherData,
   useCurrentWeatherData,
 } from "store/selectors/weather";
+import { useThunkStateWithSuspense } from "./helpers/useThunkStateWithSuspense";
 
 export const useWeather = () => {
   const setPosition = useCallback((latitude: number, longitude: number) => {
@@ -13,6 +14,7 @@ export const useWeather = () => {
   const currentData = useCurrentWeatherData();
   return {
     weatherData,
+    currentData,
     isInit: currentData.init,
     isLoading:
       !currentData.init ||
@@ -24,6 +26,20 @@ export const useWeather = () => {
     setLocation: weatherThunkActions.getCurrentDataByCityName,
     setPosition,
   };
+};
+
+export const useWeatherWithSuspense = () => {
+  const {
+    weatherData,
+    currentData,
+    isLocationFound,
+    location,
+    setLocation,
+    setPosition,
+  } = useWeather();
+  useThunkStateWithSuspense(weatherData);
+  useThunkStateWithSuspense(currentData);
+  return { weatherData, isLocationFound, location, setLocation, setPosition };
 };
 
 export const useWeatherAtHomepage = () => {

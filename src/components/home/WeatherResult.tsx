@@ -9,8 +9,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useFavorite } from "hooks/useFavorite";
-import { useWeather } from "hooks/useWeather";
-import React, { useCallback } from "react";
+import { useWeatherWithSuspense } from "hooks/useWeather";
+import React, { Suspense, useCallback } from "react";
 import TableDailyData from "./TableDailyData";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,25 +44,13 @@ const useStyles = makeStyles((theme) => ({
 
 const WeatherResult = () => {
   const classes = useStyles();
-  const {
-    weatherData,
-    isInit,
-    isLoading,
-    isLocationFound,
-    location,
-  } = useWeather();
+  const { weatherData, isLocationFound, location } = useWeatherWithSuspense();
   const { isFavorite, clickFavorite } = useFavorite();
   const currentData = weatherData.data?.current;
   const locationRef = useRefInSync(location);
   const favoriteHandler = useCallback(() => {
     clickFavorite(locationRef.current);
   }, [locationRef, clickFavorite]);
-  if (!isInit) {
-    return null;
-  }
-  if (isLoading) {
-    return <Typography>Loading...</Typography>;
-  }
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -111,4 +99,8 @@ const WeatherResult = () => {
   );
 };
 
-export default React.memo(WeatherResult);
+export default React.memo(() => (
+  <Suspense fallback={<Typography>Loading...</Typography>}>
+    <WeatherResult />
+  </Suspense>
+));
