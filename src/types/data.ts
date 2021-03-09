@@ -87,3 +87,8 @@ export interface AllWeatherData {
   };
   daily: DailyData[];
 }
+
+export interface Coordinate {
+  latitude: number;
+  longitude: number;
+}

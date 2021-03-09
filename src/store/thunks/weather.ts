@@ -4,11 +4,7 @@ import {
   getCurrentWeatherByCityName,
   getCurrentWeatherByGeolocation,
 } from "api/getWeather";
-
-interface Coordinate {
-  latitude: number;
-  longitude: number;
-}
+import { Coordinate } from "types/data";
 
 export const getAllData = createAsyncThunk(
   "weather/getAllData",
