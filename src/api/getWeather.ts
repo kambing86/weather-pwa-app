@@ -13,7 +13,7 @@ export const getCurrentWeatherByCityName = async (city: string) => {
     await axios.get(api, {
       params: {
         ...defaultParams,
-        q: city,
+        q: city.toLowerCase(),
       },
     })
   ).data as CurrentWeatherData;
