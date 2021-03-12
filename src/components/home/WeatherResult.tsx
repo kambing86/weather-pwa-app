@@ -86,7 +86,7 @@ const WeatherResult = () => {
               <>
                 <Typography className={classes.weatherText}>
                   <img
-                    src={`http://openweathermap.org/img/wn/${currentData.weather[0].icon}.png`}
+                    src={`https://openweathermap.org/img/wn/${currentData.weather[0].icon}.png`}
                     alt={currentData.weather[0].description}
                     className={classes.iconBackground}
                   />

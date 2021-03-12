@@ -60,7 +60,7 @@ const TableDailyData = ({ data }: Props) => {
                 </TableCell>
                 <TableCell align="center" className={classes.weatherText}>
                   <img
-                    src={`http://openweathermap.org/img/wn/${weather.icon}.png`}
+                    src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
                     alt={weather.description}
                     className={classes.iconBackground}
                   />

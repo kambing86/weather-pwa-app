@@ -83,7 +83,7 @@ self.addEventListener("message", (event) => {
 registerRoute(
   ({ url }) =>
     url.origin === "https://api.openweathermap.org" ||
-    url.origin === "http://openweathermap.org",
+    url.origin === "https://openweathermap.org",
   new NetworkFirst({
     cacheName: "openweathermap",
   }),
