@@ -30,14 +30,17 @@ export const useWeatherAtHomepage = () => {
   const { setLocation, setPosition } = useWeather();
   const [isGettingLocation, setIsGettingLocation] = useState(true);
   useEffect(() => {
+    let cleanup = false;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          if (cleanup) return;
           setIsGettingLocation(false);
           const { latitude, longitude } = position.coords;
           setPosition(latitude, longitude);
         },
         () => {
+          if (cleanup) return;
           setIsGettingLocation(false);
         },
         { timeout: 5000 },
@@ -45,6 +48,9 @@ export const useWeatherAtHomepage = () => {
     } else {
       setIsGettingLocation(false);
     }
+    return () => {
+      cleanup = true;
+    };
   }, [setPosition]);
   return {
     isGettingLocation,
