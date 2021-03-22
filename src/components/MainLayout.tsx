@@ -1,13 +1,17 @@
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { useIsOffline } from "hooks/useIsOffline";
 import React, { useCallback, useEffect, useState } from "react";
 import { useReactPWAInstall } from "react-pwa-install";
 import { useHasUpdate } from "store/selectors/update";
 import Copyright from "./Copyright";
 import TopSideBar from "./TopSideBar";
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,7 +113,7 @@ const MainLayout = ({ children }: Props) => {
           <Alert severity="success">Thanks for installing the app</Alert>
         </Snackbar>
         <Snackbar open={!seenOffline && isOffline}>
-          <Alert onClose={handleClose} variant="filled" severity="warning">
+          <Alert onClose={handleClose} severity="warning">
             You are offline, so data may not found or outdated.
           </Alert>
         </Snackbar>
@@ -117,16 +121,13 @@ const MainLayout = ({ children }: Props) => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={seenOffline && isOffline}
         >
-          <Alert variant="filled" severity="warning">
-            Offline
-          </Alert>
+          <Alert severity="warning">Offline</Alert>
         </Snackbar>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           open={hasUpdate}
         >
           <Alert
-            variant="filled"
             severity="warning"
             action={
               <Button

@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# NPM EXPLORER
+# Weather PWA App
 
 deployed to <https://kambing86.github.io/weather-pwa-app> using travis.com <https://travis-ci.com/github/kambing86/weather-pwa-app>
 
