@@ -72,7 +72,7 @@ const MainLayout = ({ children }: Props) => {
   const closeThanks = useCallback(() => {
     setShowThanks(false);
   }, []);
-  const showInstall = !closedInstall && supported() && !isInstalled;
+  const showInstall = !closedInstall && supported() && !isInstalled();
   return (
     <div className={classes.root}>
       <TopSideBar />
