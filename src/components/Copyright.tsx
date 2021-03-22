@@ -1,6 +1,6 @@
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import { memo } from "react";
 
 const Copyright = () => {
   return (
@@ -15,4 +15,4 @@ const Copyright = () => {
   );
 };
 
-export default React.memo(Copyright);
+export default memo(Copyright);

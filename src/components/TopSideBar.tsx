@@ -14,7 +14,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import { useAppTheme } from "hooks/useAppTheme";
-import React, { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import SideBarLink from "./SideBarLink";
 
 const drawerWidth = 180;
@@ -155,4 +155,4 @@ const TopSideBar = () => {
   );
 };
 
-export default React.memo(TopSideBar);
+export default memo(TopSideBar);

@@ -2,7 +2,13 @@ import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import MainLayout from "components/MainLayout";
 import { useAppTheme } from "hooks/useAppTheme";
 import Loading from "pages/Loading";
-import React, { Suspense, useCallback, useEffect } from "react";
+import {
+  LazyExoticComponent,
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ReactPWAInstallProvider from "react-pwa-install";
 import { Route, HashRouter as Router, Switch } from "react-router-dom";
@@ -15,8 +21,8 @@ const lazyPreloadQueue: ReactComponentLazyFactory[] = [];
 // check https://medium.com/hackernoon/lazy-loading-and-preloading-components-in-react-16-6-804de091c82d
 function lazyWithPreload(
   factory: ReactComponentLazyFactory,
-): React.LazyExoticComponent<AnyReactComponent> {
-  const Component = React.lazy(factory);
+): LazyExoticComponent<AnyReactComponent> {
+  const Component = lazy(factory);
   lazyPreloadQueue.push(factory);
   return Component;
 }

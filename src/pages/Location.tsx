@@ -3,7 +3,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import WeatherResult from "components/home/WeatherResult";
 import { useWeather } from "hooks/useWeather";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({

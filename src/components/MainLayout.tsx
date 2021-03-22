@@ -3,11 +3,14 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { useIsOffline } from "hooks/useIsOffline";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useReactPWAInstall } from "react-pwa-install";
 import { useHasUpdate } from "store/selectors/update";
 import Copyright from "./Copyright";
+import TimeoutProgress from "./TimeoutProgress";
 import TopSideBar from "./TopSideBar";
+
+const showInstallTime = 10000; // 10 seconds;
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -89,21 +92,27 @@ const MainLayout = ({ children }: Props) => {
           <Copyright />
         </footer>
         <Snackbar open={showInstall}>
-          <Alert
-            severity="info"
-            action={
-              <>
-                <Button color="inherit" size="small" onClick={handleClick}>
-                  Yes
-                </Button>
-                <Button color="inherit" size="small" onClick={closeInstall}>
-                  No
-                </Button>
-              </>
-            }
-          >
-            Do you want to install this app?
-          </Alert>
+          <>
+            <Alert
+              severity="info"
+              action={
+                <>
+                  <Button color="inherit" size="small" onClick={handleClick}>
+                    Yes
+                  </Button>
+                  <Button color="inherit" size="small" onClick={closeInstall}>
+                    No
+                  </Button>
+                </>
+              }
+            >
+              <TimeoutProgress
+                timeout={showInstallTime}
+                onDone={closeInstall}
+              />
+              Do you want to install this app?
+            </Alert>
+          </>
         </Snackbar>
         <Snackbar
           open={showThanks}

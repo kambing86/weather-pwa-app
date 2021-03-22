@@ -11,7 +11,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import WeatherResult from "components/home/WeatherResult";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useWeatherAtHomepage } from "hooks/useWeather";
-import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   container: {

@@ -2,7 +2,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { useRoute } from "hooks/helpers/useRoute";
-import React, { useCallback } from "react";
+import { memo, useCallback } from "react";
 
 interface Props {
   path: string;
@@ -29,4 +29,4 @@ const SideBarLink = ({ path, text, icon, onClick }: Props) => {
   );
 };
 
-export default React.memo(SideBarLink);
+export default memo(SideBarLink);

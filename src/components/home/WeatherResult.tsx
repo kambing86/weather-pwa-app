@@ -10,7 +10,7 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useFavorite } from "hooks/useFavorite";
 import { useWeather } from "hooks/useWeather";
-import React, { useCallback } from "react";
+import { memo, useCallback } from "react";
 import TableDailyData from "./TableDailyData";
 
 const useStyles = makeStyles((theme) => ({
@@ -111,4 +111,4 @@ const WeatherResult = () => {
   );
 };
 
-export default React.memo(WeatherResult);
+export default memo(WeatherResult);

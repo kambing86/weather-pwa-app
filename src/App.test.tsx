@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@material-ui/core";
 import { render, screen } from "@testing-library/react";
 import { useAppTheme } from "hooks/useAppTheme";
-import React from "react";
 import App from "./App";
 
 jest.mock("@material-ui/core");

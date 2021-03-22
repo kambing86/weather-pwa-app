@@ -6,7 +6,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import { memo } from "react";
 import { DailyData } from "types/data";
 
 const useStyles = makeStyles((theme) => ({
@@ -77,4 +77,4 @@ const TableDailyData = ({ data }: Props) => {
   );
 };
 
-export default React.memo(TableDailyData);
+export default memo(TableDailyData);
