@@ -4,6 +4,7 @@ import { useAppTheme } from "hooks/useAppTheme";
 import Loading from "pages/Loading";
 import React, { Suspense, useCallback, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import ReactPWAInstallProvider from "react-pwa-install";
 import { Route, HashRouter as Router, Switch } from "react-router-dom";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,20 +46,22 @@ function App() {
       <CssBaseline />
       <Suspense fallback={<Loading />}>
         <ErrorBoundary FallbackComponent={ErrorPage} onReset={onResetHandler}>
-          <Router>
-            <MainLayout>
-              <Switch>
-                <Route exact path="/" component={HomePage} />
-                <Route exact path="/favorite" component={FavoritePage} />
-                <Route
-                  exact
-                  path="/location/:location"
-                  component={LocationPage}
-                />
-                <Route component={NotFoundPage} />
-              </Switch>
-            </MainLayout>
-          </Router>
+          <ReactPWAInstallProvider>
+            <Router>
+              <MainLayout>
+                <Switch>
+                  <Route exact path="/" component={HomePage} />
+                  <Route exact path="/favorite" component={FavoritePage} />
+                  <Route
+                    exact
+                    path="/location/:location"
+                    component={LocationPage}
+                  />
+                  <Route component={NotFoundPage} />
+                </Switch>
+              </MainLayout>
+            </Router>
+          </ReactPWAInstallProvider>
         </ErrorBoundary>
       </Suspense>
     </ThemeProvider>

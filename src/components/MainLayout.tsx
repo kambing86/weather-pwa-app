@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
 import { useIsOffline } from "hooks/useIsOffline";
 import React, { useCallback, useEffect, useState } from "react";
+import { useReactPWAInstall } from "react-pwa-install";
 import { useHasUpdate } from "store/selectors/update";
 import Copyright from "./Copyright";
 import TopSideBar from "./TopSideBar";
@@ -45,6 +46,33 @@ const MainLayout = ({ children }: Props) => {
   const handleClose = useCallback(() => {
     setSeenOffline(true);
   }, []);
+  const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
+  const [closedInstall, setClosedInstall] = useState(false);
+  const [showThanks, setShowThanks] = useState(false);
+  const handleClick = useCallback(() => {
+    setClosedInstall(true);
+    void pwaInstall({
+      title: "Install",
+      logo: `${process.env.PUBLIC_URL}/logo192.png`,
+      features: (
+        <ul>
+          <li>Get weather for current location</li>
+          <li>Save as favorite</li>
+          <li>Works offline</li>
+        </ul>
+      ),
+      description: "Weather PWA App built using Create React App",
+    }).then(() => {
+      setShowThanks(true);
+    });
+  }, [pwaInstall]);
+  const closeInstall = useCallback(() => {
+    setClosedInstall(true);
+  }, []);
+  const closeThanks = useCallback(() => {
+    setShowThanks(false);
+  }, []);
+  const showInstall = !closedInstall && supported() && !isInstalled;
   return (
     <div className={classes.root}>
       <TopSideBar />
@@ -56,13 +84,32 @@ const MainLayout = ({ children }: Props) => {
         <footer className={classes.footer}>
           <Copyright />
         </footer>
-        <Snackbar open={!seenOffline && isOffline}>
+        <Snackbar open={showInstall}>
           <Alert
-            onClose={handleClose}
-            elevation={6}
-            variant="filled"
-            severity="warning"
+            severity="info"
+            action={
+              <>
+                <Button color="inherit" size="small" onClick={handleClick}>
+                  Yes
+                </Button>
+                <Button color="inherit" size="small" onClick={closeInstall}>
+                  No
+                </Button>
+              </>
+            }
           >
+            Do you want to install this app?
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showThanks}
+          autoHideDuration={5000}
+          onClose={closeThanks}
+        >
+          <Alert severity="success">Thanks for installing the app</Alert>
+        </Snackbar>
+        <Snackbar open={!seenOffline && isOffline}>
+          <Alert onClose={handleClose} variant="filled" severity="warning">
             You are offline, so data may not found or outdated.
           </Alert>
         </Snackbar>
@@ -70,7 +117,7 @@ const MainLayout = ({ children }: Props) => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={seenOffline && isOffline}
         >
-          <Alert elevation={6} variant="filled" severity="warning">
+          <Alert variant="filled" severity="warning">
             Offline
           </Alert>
         </Snackbar>
@@ -79,7 +126,6 @@ const MainLayout = ({ children }: Props) => {
           open={hasUpdate}
         >
           <Alert
-            elevation={6}
             variant="filled"
             severity="warning"
             action={

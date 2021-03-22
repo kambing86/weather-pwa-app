@@ -22,6 +22,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-error-boundary": "^3.1.1",
+    "react-pwa-install": "^1.0.12",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -50,7 +51,7 @@
     "lint": "eslint 'src/**/*.{j,t}s{,x}'",
     "lint:fix": "eslint --fix 'src/**/*.{j,t}s{,x}'",
     "preserve": "rimraf build && rimraf weather-pwa-app && yarn build && mv build weather-pwa-app",
-    "serve": "npx open-cli http://localhost:5000/weather-pwa-app/ && npx serve"
+    "serve": "npx open-cli http://localhost:5000/weather-pwa-app/ -- 'google chrome' && npx serve"
   },
   "eslintConfig": {
     "extends": [

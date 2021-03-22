@@ -1,5 +1,5 @@
 {
-  "short_name": "Weather PWA App",
+  "short_name": "Weather App",
   "name": "Weather PWA App",
   "icons": [
     {
@@ -24,5 +24,9 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#000000"
+  "background_color": "#000000",
+  "description": "Weather PWA App built using Create React App",
+  "orientation": "portrait-primary",
+  "categories": ["weather"],
+  "shortcuts": []
 }
