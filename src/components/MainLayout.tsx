@@ -60,7 +60,7 @@ const MainLayout = ({ children }: Props) => {
     setClosedInstall(true);
     void pwaInstall({
       title: "Install",
-      logo: `${process.env.PUBLIC_URL}/logo192.png`,
+      logo: `${process.env.PUBLIC_URL}/favicon.ico`,
       features: (
         <ul>
           <li>Get weather for current location</li>
@@ -92,27 +92,22 @@ const MainLayout = ({ children }: Props) => {
           <Copyright />
         </footer>
         <Snackbar open={showInstall}>
-          <>
-            <Alert
-              severity="info"
-              action={
-                <>
-                  <Button color="inherit" size="small" onClick={handleClick}>
-                    Yes
-                  </Button>
-                  <Button color="inherit" size="small" onClick={closeInstall}>
-                    No
-                  </Button>
-                </>
-              }
-            >
-              <TimeoutProgress
-                timeout={showInstallTime}
-                onDone={closeInstall}
-              />
-              Do you want to install this app?
-            </Alert>
-          </>
+          <Alert
+            severity="info"
+            action={
+              <>
+                <Button color="inherit" size="small" onClick={handleClick}>
+                  Yes
+                </Button>
+                <Button color="inherit" size="small" onClick={closeInstall}>
+                  No
+                </Button>
+              </>
+            }
+          >
+            <TimeoutProgress timeout={showInstallTime} onDone={closeInstall} />
+            Do you want to install this app?
+          </Alert>
         </Snackbar>
         <Snackbar
           open={showThanks}
