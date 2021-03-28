@@ -1,6 +1,7 @@
 module.exports = {
   extends: [
     "react-app",
+    "react-app/jest",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
@@ -23,7 +24,7 @@ module.exports = {
       },
     ],
     "comma-dangle": ["error", "always-multiline"],
-    "no-shadow": ["warn"],
+    "no-shadow": ["off"],
     "sort-imports": [
       "error",
       {
@@ -48,6 +49,7 @@ module.exports = {
         },
       },
     ],
+    "@typescript-eslint/no-shadow": ["warn"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/no-unused-vars": [
       "warn",
