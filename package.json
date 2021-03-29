@@ -7,23 +7,23 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
-    "@reduxjs/toolkit": "^1.5.0",
-    "@testing-library/jest-dom": "^5.11.4",
+    "@reduxjs/toolkit": "^1.5.1",
+    "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^14.14.31",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.37",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
     "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-error-boundary": "^3.1.1",
     "react-pwa-install": "^1.0.12",
-    "react-redux": "^7.2.2",
+    "react-redux": "^7.2.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "typescript": "^4.0.3",
@@ -52,12 +52,6 @@
     "lint:fix": "eslint --fix 'src/**/*.{j,t}s{,x}'",
     "preserve": "rimraf build && rimraf weather-pwa-app && yarn build && mv build weather-pwa-app",
     "serve": "npx open-cli http://localhost:5000/weather-pwa-app/ -- 'google chrome' && npx serve"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
