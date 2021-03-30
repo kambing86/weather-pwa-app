@@ -1,0 +1,2 @@
+(this["webpackJsonpweather-pwa-app"]=this["webpackJsonpweather-pwa-app"]||[]).push([[9],{252:function(e,t,n){"use strict";n.r(t);var a=n(199),r=n(55),c=n(2);t.default=function(){return Object(c.jsx)(a.a,{container:!0,alignContent:"center",justify:"center",style:{height:"100vh"},children:Object(c.jsx)(r.a,{variant:"h3",children:"Page Not Found"})})}}}]);
+//# sourceMappingURL=9.f89bf0a1.chunk.js.map
