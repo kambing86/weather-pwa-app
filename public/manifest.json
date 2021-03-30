@@ -28,5 +28,6 @@
   "description": "Weather PWA App built using Create React App",
   "orientation": "portrait-primary",
   "categories": ["weather"],
-  "shortcuts": []
+  "shortcuts": [],
+  "scope": "https://kambing86.github.io/weather-pwa-app/"
 }
