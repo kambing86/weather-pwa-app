@@ -9,9 +9,9 @@ import TimeoutProgress from "./TimeoutProgress";
 
 const showInstallTime = 10000; // 10 seconds;
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => {
+  return <MuiAlert ref={ref} elevation={6} variant="filled" {...props} />;
+});
 
 const PWAPopup = () => {
   const hasUpdate = useHasUpdate();
@@ -47,6 +47,24 @@ const PWAPopup = () => {
     !closedInstall && isInstallPromptSupported && !isStandalone;
   return (
     <>
+      <Snackbar open={true}>
+        <Alert
+          severity="info"
+          action={
+            <>
+              <Button color="inherit" size="small" onClick={handleClick}>
+                Yes
+              </Button>
+              <Button color="inherit" size="small" onClick={closeInstall}>
+                No
+              </Button>
+            </>
+          }
+        >
+          <TimeoutProgress timeout={showInstallTime} onDone={closeInstall} />
+          Do you want to install this app?
+        </Alert>
+      </Snackbar>
       <Snackbar open={showInstall}>
         <Alert
           severity="info"
