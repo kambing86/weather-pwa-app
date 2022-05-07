@@ -47,24 +47,6 @@ const PWAPopup = () => {
     !closedInstall && isInstallPromptSupported && !isStandalone;
   return (
     <>
-      <Snackbar open={true}>
-        <Alert
-          severity="info"
-          action={
-            <>
-              <Button color="inherit" size="small" onClick={handleClick}>
-                Yes
-              </Button>
-              <Button color="inherit" size="small" onClick={closeInstall}>
-                No
-              </Button>
-            </>
-          }
-        >
-          <TimeoutProgress timeout={showInstallTime} onDone={closeInstall} />
-          Do you want to install this app?
-        </Alert>
-      </Snackbar>
       <Snackbar open={showInstall}>
         <Alert
           severity="info"
