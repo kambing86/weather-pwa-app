@@ -16,14 +16,11 @@ const SideBarLink = ({ path, text, icon }: Props) => {
   const clickHandler = useCallback(() => {
     pushHistory(path);
   }, [path, pushHistory]);
+  const isCurrentPath = location.pathname === path;
   return (
-    <ListItem
-      button
-      onClick={clickHandler}
-      selected={location.pathname === path ? true : false}
-    >
+    <ListItem button onClick={clickHandler} selected={isCurrentPath}>
       <ListItemIcon>
-        <Icon>{icon}</Icon>
+        <Icon color={isCurrentPath ? "primary" : "inherit"}>{icon}</Icon>
       </ListItemIcon>
       <ListItemText primary={text} />
     </ListItem>
