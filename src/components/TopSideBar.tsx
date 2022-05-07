@@ -11,7 +11,7 @@ import SideBarLinkList from "./SideBarLinkList";
 import TopBar from "./TopBar";
 
 const TopSideBar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const handleDrawerOpen = useCallback(() => {
     setIsOpen(true);
   }, []);
