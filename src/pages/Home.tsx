@@ -1,19 +1,20 @@
-import Container from "@material-ui/core/Container";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import InputLabel from "@material-ui/core/InputLabel";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
+import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import WeatherResult from "components/home/WeatherResult";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useWeatherAtHomepage } from "hooks/useWeather";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
@@ -55,7 +56,7 @@ export default function Home() {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton type="submit" edge="end">
-                      <SearchIcon />
+                      <Icon>search</Icon>
                     </IconButton>
                   </InputAdornment>
                 }

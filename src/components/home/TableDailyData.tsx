@@ -1,19 +1,21 @@
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { memo } from "react";
+import { DARK } from "store/slices/theme.slice";
 import { DailyData } from "types/data";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   iconBackground: {
     background:
-      theme.palette.type === "dark"
-        ? "radial-gradient(circle at center, #606060 0, #424242 75%)"
+      theme.palette.mode === DARK
+        ? "radial-gradient(circle at center, #606060 0, #1e1e1e 75%)"
         : "radial-gradient(circle at center, #CCCCCC 0, #fff 75%)",
   },
   table: {

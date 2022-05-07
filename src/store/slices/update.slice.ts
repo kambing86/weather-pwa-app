@@ -16,4 +16,8 @@ export const updateSlice = createSlice({
   },
 });
 
-export default updateSlice.reducer;
+export const updateActions = updateSlice.actions;
+
+const update = updateSlice.reducer;
+
+export default update;

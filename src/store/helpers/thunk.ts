@@ -21,7 +21,7 @@ export function createInitialThunkState<ReturnData>(): ThunkState<ReturnData> {
 
 export function handleThunk<State, ReturnData, Args>(
   builder: ActionReducerMapBuilder<State>,
-  asyncThunk: AsyncThunk<ReturnData, Args, {}>, // eslint-disable-line @typescript-eslint/ban-types
+  asyncThunk: AsyncThunk<ReturnData, Args, Record<string, never>>,
   mapFunc: (state: Draft<State>) => Draft<ThunkState<ReturnData>>,
 ) {
   builder

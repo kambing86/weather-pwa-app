@@ -1,154 +1,56 @@
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import { makeStyles } from "@material-ui/core/styles";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { useIsOffline } from "hooks/useIsOffline";
-import { useCallback, useEffect, useState } from "react";
-import { useReactPWAInstall } from "react-pwa-install";
-import { useHasUpdate } from "store/selectors/update";
+import Box from "@mui/material/Box";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import { FavoritePage, HomePage, LocationPage, NotFoundPage } from "preload";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 import Copyright from "./Copyright";
-import TimeoutProgress from "./TimeoutProgress";
+import PWAPopup from "./PWAPopup";
 import TopSideBar from "./TopSideBar";
 
-const showInstallTime = 10000; // 10 seconds;
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  content: {
-    flexGrow: 1,
-    height: "100vh",
-    overflow: "auto",
-    display: "flex",
-    flexDirection: "column",
-  },
+const useStyles = makeStyles<Theme>((theme) => ({
   contentWrapper: {
     flexGrow: 1,
   },
   appBarSpacer: theme.mixins.toolbar,
-  footer: {
-    padding: theme.spacing(4),
-  },
 }));
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-const MainLayout = ({ children }: Props) => {
+const MainLayout = () => {
   const classes = useStyles();
-  const hasUpdate = useHasUpdate();
-  const isOffline = useIsOffline();
-  const [seenOffline, setSeenOffline] = useState(false);
-  useEffect(() => {
-    if (!isOffline) {
-      setSeenOffline(false);
-    }
-  }, [isOffline]);
-  const handleClose = useCallback(() => {
-    setSeenOffline(true);
-  }, []);
-  const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
-  const [closedInstall, setClosedInstall] = useState(false);
-  const [showThanks, setShowThanks] = useState(false);
-  const handleClick = useCallback(() => {
-    setClosedInstall(true);
-    void pwaInstall({
-      title: "Install",
-      logo: `${process.env.PUBLIC_URL}/favicon.ico`,
-      features: (
-        <ul>
-          <li>Get weather for current location</li>
-          <li>Save as favorite</li>
-          <li>Works offline</li>
-        </ul>
-      ),
-      description: "Weather PWA App built using Create React App",
-    }).then(() => {
-      setShowThanks(true);
-    });
-  }, [pwaInstall]);
-  const closeInstall = useCallback(() => {
-    setClosedInstall(true);
-  }, []);
-  const closeThanks = useCallback(() => {
-    setShowThanks(false);
-  }, []);
-  const showInstall = !closedInstall && supported() && !isInstalled();
+
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: "flex" }} color="text.primary">
       <TopSideBar />
-      <main className={classes.content}>
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          flexGrow: 1,
+          height: "100vh",
+          overflow: "auto",
+          display: "flex",
+          flexFlow: "column",
+        }}
+      >
         <div className={classes.contentWrapper}>
           <div className={classes.appBarSpacer} />
-          {children}
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/favorite" element={<FavoritePage />} />
+            <Route path="/location/:location" element={<LocationPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </div>
-        <footer className={classes.footer}>
+        <Box component="footer" sx={{ my: 2 }}>
           <Copyright />
-        </footer>
-        <Snackbar open={showInstall}>
-          <Alert
-            severity="info"
-            action={
-              <>
-                <Button color="inherit" size="small" onClick={handleClick}>
-                  Yes
-                </Button>
-                <Button color="inherit" size="small" onClick={closeInstall}>
-                  No
-                </Button>
-              </>
-            }
-          >
-            <TimeoutProgress timeout={showInstallTime} onDone={closeInstall} />
-            Do you want to install this app?
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={showThanks}
-          autoHideDuration={5000}
-          onClose={closeThanks}
-        >
-          <Alert severity="success">Thanks for installing the app</Alert>
-        </Snackbar>
-        <Snackbar open={!seenOffline && isOffline}>
-          <Alert onClose={handleClose} severity="warning">
-            You are offline, so data may not found or outdated.
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={seenOffline && isOffline}
-        >
-          <Alert severity="warning">Offline</Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={hasUpdate}
-        >
-          <Alert
-            severity="warning"
-            action={
-              <Button
-                color="inherit"
-                size="small"
-                onClick={() => window.location.reload()}
-              >
-                Restart
-              </Button>
-            }
-          >
-            New version detected, please refresh the page to update
-          </Alert>
-        </Snackbar>
-      </main>
-    </div>
+        </Box>
+        <PWAPopup />
+      </Box>
+    </Box>
   );
 };
 
-export default MainLayout;
+export default React.memo(MainLayout);

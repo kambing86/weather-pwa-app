@@ -32,4 +32,6 @@ export const weatherSlice = createSlice({
   },
 });
 
-export default weatherSlice.reducer;
+const weather = weatherSlice.reducer;
+
+export default weather;

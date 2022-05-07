@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import { State } from "store";
+import { RootState } from "store";
 
 export const useCurrentWeatherData = () => {
-  return useSelector((state: State) => state.weather.current);
+  return useSelector((state: RootState) => state.weather.current);
 };
 
 export const useAllWeatherData = () => {
-  return useSelector((state: State) => state.weather.all);
+  return useSelector((state: RootState) => state.weather.all);
 };

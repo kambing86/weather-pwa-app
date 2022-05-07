@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import { State } from "store";
+import { RootState } from "store";
 
 export const useHasUpdate = () => {
-  return useSelector((state: State) => state.update.hasUpdate);
+  return useSelector((state: RootState) => state.update.hasUpdate);
 };

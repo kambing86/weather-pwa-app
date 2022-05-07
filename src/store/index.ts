@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import theme from "./slices/theme";
-import update from "./slices/update";
-import weather from "./slices/weather";
+import theme from "./slices/theme.slice";
+import update from "./slices/update.slice";
+import weather from "./slices/weather.slice";
 
 const store = configureStore({
   reducer: {
@@ -14,7 +14,7 @@ const store = configureStore({
   },
 });
 
-export type State = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;

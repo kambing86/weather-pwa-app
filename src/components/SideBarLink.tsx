@@ -1,32 +1,33 @@
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import Icon from "@mui/material/Icon";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import { useRoute } from "hooks/helpers/useRoute";
-import { memo, useCallback } from "react";
+import React, { useCallback } from "react";
 
 interface Props {
   path: string;
   text: string;
-  icon: JSX.Element;
-  onClick?: () => void;
+  icon: string;
 }
 
-const SideBarLink = ({ path, text, icon, onClick }: Props) => {
+const SideBarLink = ({ path, text, icon }: Props) => {
   const { pushHistory, location } = useRoute();
   const clickHandler = useCallback(() => {
     pushHistory(path);
-    onClick?.();
-  }, [path, pushHistory, onClick]);
+  }, [path, pushHistory]);
   return (
     <ListItem
       button
       onClick={clickHandler}
       selected={location.pathname === path ? true : false}
     >
-      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemIcon>
+        <Icon>{icon}</Icon>
+      </ListItemIcon>
       <ListItemText primary={text} />
     </ListItem>
   );
 };
 
-export default memo(SideBarLink);
+export default React.memo(SideBarLink);

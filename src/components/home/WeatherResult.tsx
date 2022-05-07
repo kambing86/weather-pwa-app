@@ -1,33 +1,34 @@
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import Icon from "@mui/material/Icon";
+import Typography from "@mui/material/Typography";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useFavorite } from "hooks/useFavorite";
 import { useWeather } from "hooks/useWeather";
 import { memo, useCallback } from "react";
+import { DARK } from "store/slices/theme.slice";
 import TableDailyData from "./TableDailyData";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   root: {
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
-    backgroundColor: theme.palette.type === "dark" ? "#333" : "#f5f5f5",
+    backgroundColor: theme.palette.mode === DARK ? "#333" : "#f5f5f5",
     [theme.breakpoints.up("sm")]: {
       padding: theme.spacing(2),
     },
   },
   iconBackground: {
     background:
-      theme.palette.type === "dark"
-        ? "radial-gradient(circle at center, #606060 0, #333 75%)"
-        : "radial-gradient(circle at center, #CCCCCC 0, #f5f5f5 75%)",
+      theme.palette.mode === DARK
+        ? "radial-gradient(circle at center, #606060 0, #1e1e1e 75%)"
+        : "radial-gradient(circle at center, #CCCCCC 0, #fff 75%)",
   },
   divider: {
     marginTop: theme.spacing(2),
@@ -44,13 +45,8 @@ const useStyles = makeStyles((theme) => ({
 
 const WeatherResult = () => {
   const classes = useStyles();
-  const {
-    weatherData,
-    isInit,
-    isLoading,
-    isLocationFound,
-    location,
-  } = useWeather();
+  const { weatherData, isInit, isLoading, isLocationFound, location } =
+    useWeather();
   const { isFavorite, clickFavorite } = useFavorite();
   const currentData = weatherData.data?.current;
   const locationRef = useRefInSync(location);
@@ -73,9 +69,9 @@ const WeatherResult = () => {
               <Typography>{location}</Typography>
               <Button size="small" onClick={favoriteHandler}>
                 {isFavorite(location) ? (
-                  <FavoriteIcon color="secondary" />
+                  <Icon sx={{ color: "#f50057" }}>favorite</Icon>
                 ) : (
-                  <FavoriteBorderIcon color="secondary" />
+                  <Icon sx={{ color: "#f50057" }}>favorite_border</Icon>
                 )}
               </Button>
             </CardActions>

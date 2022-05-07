@@ -1,23 +1,23 @@
 import { useCallback } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRefInSync } from "./useRefInSync";
 
 export function useRoute() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const locationRef = useRefInSync(location);
 
   const pushHistory = useCallback(
     (path: string) => {
       if (locationRef.current.pathname !== path) {
-        history.push(path);
+        navigate(path);
       }
     },
-    [history, locationRef],
+    [navigate, locationRef],
   );
 
   return {
-    history,
+    navigate,
     location,
     pushHistory,
   };

@@ -1,12 +1,17 @@
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-import { memo } from "react";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import React, { ComponentProps } from "react";
 
-const Copyright = () => {
+const Copyright = (props: ComponentProps<typeof Typography>) => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
       {"Copyright © "}
-      <Link color="inherit" href="https://github.com/kambing86">
+      <Link color="text.secondary" href="https://github.com/kambing86">
         kambing86
       </Link>{" "}
       {new Date().getFullYear()}
@@ -15,4 +20,4 @@ const Copyright = () => {
   );
 };
 
-export default memo(Copyright);
+export default React.memo(Copyright);
