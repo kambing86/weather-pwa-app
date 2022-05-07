@@ -11,7 +11,7 @@ jest.mock("hooks/useAppTheme", () => ({
   __esModule: true,
   useAppTheme: jest.fn(),
 }));
-jest.mock("components/MainLayout", () => ({
+jest.mock("layout/MainLayout", () => ({
   __esModule: true,
   default: jest.fn(),
 }));
