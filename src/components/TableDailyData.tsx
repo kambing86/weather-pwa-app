@@ -10,13 +10,14 @@ import makeStyles from "@mui/styles/makeStyles";
 import { memo } from "react";
 import { DARK } from "store/slices/theme.slice";
 import { DailyData } from "types/data";
+import { DARK_RADIAL_GRADIENT, LIGHT_RADIAL_GRADIENT } from "./constants";
 
 const useStyles = makeStyles<Theme>((theme) => ({
   iconBackground: {
     background:
       theme.palette.mode === DARK
-        ? "radial-gradient(circle at center, #606060 0, #1e1e1e 75%)"
-        : "radial-gradient(circle at center, #CCCCCC 0, #fff 75%)",
+        ? DARK_RADIAL_GRADIENT
+        : LIGHT_RADIAL_GRADIENT,
   },
   table: {
     minWidth: 200,
