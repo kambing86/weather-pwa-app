@@ -9,7 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import WeatherResult from "components/home/WeatherResult";
+import WeatherResult from "components/WeatherResult";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useWeatherAtHomepage } from "hooks/useWeather";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";

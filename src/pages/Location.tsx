@@ -2,7 +2,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import WeatherResult from "components/home/WeatherResult";
+import WeatherResult from "components/WeatherResult";
 import { useWeather } from "hooks/useWeather";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";

@@ -1,7 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
-import MainLayout from "components/MainLayout";
 import { useAppTheme } from "hooks/useAppTheme";
+import MainLayout from "layout/MainLayout";
 import Loading from "pages/Loading";
 import { ErrorPage, preloadAll } from "preload";
 import { Suspense, useCallback, useEffect } from "react";
