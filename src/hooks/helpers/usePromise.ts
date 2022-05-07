@@ -30,9 +30,8 @@ export default function usePromise<ReturnData, ErrorThrown = Error>(
   const [promise, setPromise] = useState<Promise<ReturnData> | undefined>(
     initialPromise,
   );
-  const [state, setState] = useState<PromiseState<ReturnData, ErrorThrown>>(
-    getInitialState,
-  );
+  const [state, setState] =
+    useState<PromiseState<ReturnData, ErrorThrown>>(getInitialState);
   useEffect(() => {
     if (!promise) {
       return;

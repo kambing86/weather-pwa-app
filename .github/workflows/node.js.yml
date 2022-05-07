@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 16
           cache: "yarn"
-      - run: yarn install
+      - run: yarn install --immutable
       - run: yarn lint
       - run: yarn prettier
       - run: yarn test
@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 16
           cache: "yarn"
-      - run: yarn install
+      - run: yarn install --immutable
       - run: yarn build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
