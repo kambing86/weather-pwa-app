@@ -5,7 +5,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import WeatherResult from "components/WeatherResult";
 import { useWeather } from "hooks/useWeather";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {

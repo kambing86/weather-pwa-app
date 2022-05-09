@@ -13,29 +13,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.1
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "yarn"
-      - run: yarn install --immutable
-      - run: yarn lint
-      - run: yarn prettier
-      - run: yarn test
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm prettier
+      - run: pnpm run test --passWithNoTests
   deploy:
     needs: [test]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.1
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "yarn"
-      - run: yarn install --immutable
-      - run: yarn build
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
