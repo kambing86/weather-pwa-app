@@ -11,7 +11,7 @@ type Bill = {
 };
 
 const BILLS_KEY = "bills";
-const WRONG_ITEM = "Wrong item";
+const WRONG_INPUT = "Wrong input";
 const BILL_NAME_MESSAGE = "What do you want to name your bill?";
 const NEXT_ITEM_MESSAGE =
   "Let me know the next bill item amount and who share this bill item.";
@@ -119,11 +119,12 @@ const billsSlice = createSlice({
     addItem(state, action: PayloadAction<string>) {
       const record = action.payload;
       const firstSpaceIndex = record.indexOf(" ");
-      if (firstSpaceIndex === -1) throw new Error(WRONG_ITEM);
+      if (firstSpaceIndex === -1) throw new Error(WRONG_INPUT);
 
       const price = parseFloat(record.slice(0, firstSpaceIndex));
+      if (Number.isNaN(price)) throw new Error(WRONG_INPUT);
       const persons = record.slice(firstSpaceIndex + 1).split(",");
-      if (persons.length === 0) throw new Error(WRONG_ITEM);
+      if (persons.length === 0) throw new Error(WRONG_INPUT);
 
       const index = state.index;
       const currentBill = state.history[index];
@@ -135,12 +136,12 @@ const billsSlice = createSlice({
           p.name.toLowerCase().startsWith(person.trim().toLowerCase()),
         );
         if (filtered.length !== 1) {
-          throw new Error(WRONG_ITEM);
+          throw new Error(WRONG_INPUT);
         }
         const thePerson = currentPersons.find(
           (p) => p.name === filtered[0].name,
         );
-        if (thePerson == null) throw new Error(WRONG_ITEM);
+        if (thePerson == null) throw new Error(WRONG_INPUT);
         thePerson.price += pricePerPerson;
         allNames.push(thePerson.name);
       }
@@ -162,7 +163,9 @@ const billsSlice = createSlice({
     setServiceTax(state, action: PayloadAction<string>) {
       const index = state.index;
       const currentBill = state.history[index];
-      currentBill.serviceTax = parseFloat(action.payload);
+      const serviceTax = parseFloat(action.payload);
+      if (Number.isNaN(serviceTax)) throw new Error(WRONG_INPUT);
+      currentBill.serviceTax = serviceTax;
       state.response = `Ok, the service charge is ${
         action.payload
       }%. This equals to $${getServiceCharge(currentBill).toFixed(2)}.
@@ -173,7 +176,9 @@ const billsSlice = createSlice({
     setGST(state, action: PayloadAction<string>) {
       const index = state.index;
       const currentBill = state.history[index];
-      currentBill.GST = parseFloat(action.payload);
+      const gst = parseFloat(action.payload);
+      if (Number.isNaN(gst)) throw new Error(WRONG_INPUT);
+      currentBill.GST = gst;
       state.response = `Ok, the GST is ${
         action.payload
       }%. This equals to $${getGST(currentBill).toFixed(2)}.
