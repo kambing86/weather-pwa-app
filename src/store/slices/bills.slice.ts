@@ -166,9 +166,9 @@ const billsSlice = createSlice({
       const serviceTax = parseFloat(action.payload);
       if (Number.isNaN(serviceTax)) throw new Error(WRONG_INPUT);
       currentBill.serviceTax = serviceTax;
-      state.response = `Ok, the service charge is ${
-        action.payload
-      }%. This equals to $${getServiceCharge(currentBill).toFixed(2)}.
+      state.response = `Ok, the service charge is ${serviceTax}%. This equals to $${getServiceCharge(
+        currentBill,
+      ).toFixed(2)}.
       
       How much is the GST?`;
       state.state = "GST";
@@ -179,9 +179,9 @@ const billsSlice = createSlice({
       const gst = parseFloat(action.payload);
       if (Number.isNaN(gst)) throw new Error(WRONG_INPUT);
       currentBill.GST = gst;
-      state.response = `Ok, the GST is ${
-        action.payload
-      }%. This equals to $${getGST(currentBill).toFixed(2)}.
+      state.response = `Ok, the GST is ${gst}%. This equals to $${getGST(
+        currentBill,
+      ).toFixed(2)}.
       
       ${getFinalResponse(currentBill)}`;
       state.state = "total";
@@ -218,7 +218,7 @@ function getFinalResponse(bill: Bill) {
   
   ${bill.persons
     .sort((a, b) => {
-      return b.name.localeCompare(a.name);
+      return a.name.localeCompare(b.name);
     })
     .map((p) => `${p.name}: $${getPersonCharge(bill, p).toFixed(2)}\n`)
     .join("")}
