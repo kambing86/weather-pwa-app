@@ -28,6 +28,6 @@ test("renders ThemeProvider", () => {
   render(<App />);
   const linkElement = screen.getByText(/Weather app/i);
   expect(linkElement).toBeInTheDocument();
-  expect(mockedUseAppTheme).toBeCalledTimes(1);
-  expect(mockedThemeProvider).toBeCalledTimes(1);
+  expect(mockedUseAppTheme).toHaveBeenCalledTimes(1);
+  expect(mockedThemeProvider).toHaveBeenCalledTimes(1);
 });
