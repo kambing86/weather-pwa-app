@@ -21,7 +21,7 @@ const initialState: WeatherState = {
   current: createInitialThunkState(),
 };
 
-export const weatherSlice = createSlice({
+const weatherSlice = createSlice({
   name: "weather",
   initialState,
   reducers: {},
@@ -32,6 +32,4 @@ export const weatherSlice = createSlice({
   },
 });
 
-const weather = weatherSlice.reducer;
-
-export default weather;
+export default weatherSlice;

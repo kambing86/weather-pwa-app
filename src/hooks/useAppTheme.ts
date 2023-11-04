@@ -3,7 +3,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
-import { DARK, LIGHT, themeActions } from "store/slices/theme.slice";
+import themeSlice, { DARK, LIGHT } from "store/slices/theme.slice";
 
 // set it here https://material-ui.com/customization/default-theme/
 const getTheme = (themeMode: Palette["mode"] | null) => {
@@ -23,7 +23,7 @@ export const useAppTheme = () => {
   const [theme, setTheme] = useState(getTheme(themeMode));
   const dispatch = useDispatch();
   const toggleDarkMode = useCallback(() => {
-    dispatch(themeActions.toggleTheme());
+    dispatch(themeSlice.actions.toggleTheme());
   }, [dispatch]);
   // if localStorage has no saved theme type, then set using media query
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Palette } from "@mui/material/styles";
+import type { Palette } from "@mui/material/styles";
 import { createSlice } from "@reduxjs/toolkit";
 
 const THEME_KEY = "theme";
@@ -16,7 +16,7 @@ type State = Readonly<Palette["mode"] | null>;
 
 const initialState: State = getTheme();
 
-export const themeSlice = createSlice({
+const themeSlice = createSlice({
   name: "theme",
   initialState,
   reducers: {
@@ -28,8 +28,4 @@ export const themeSlice = createSlice({
   },
 });
 
-export const themeActions = themeSlice.actions;
-
-const theme = themeSlice.reducer;
-
-export default theme;
+export default themeSlice;

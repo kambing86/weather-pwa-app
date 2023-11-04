@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
+import BillsPage from "pages/BillsPage";
 import { FavoritePage, HomePage, LocationPage, NotFoundPage } from "preload";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
@@ -41,6 +42,7 @@ const MainLayout = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/favorite" element={<FavoritePage />} />
             <Route path="/location/:location" element={<LocationPage />} />
+            <Route path="/bills" element={<BillsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

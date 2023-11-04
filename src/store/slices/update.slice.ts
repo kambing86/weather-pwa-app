@@ -6,7 +6,7 @@ type UpdateState = {
 
 const initialState: UpdateState = { hasUpdate: false };
 
-export const updateSlice = createSlice({
+const updateSlice = createSlice({
   name: "update",
   initialState,
   reducers: {
@@ -16,8 +16,4 @@ export const updateSlice = createSlice({
   },
 });
 
-export const updateActions = updateSlice.actions;
-
-const update = updateSlice.reducer;
-
-export default update;
+export default updateSlice;
