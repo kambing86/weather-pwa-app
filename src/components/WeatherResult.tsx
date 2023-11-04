@@ -77,7 +77,7 @@ const WeatherResult = () => {
               </Button>
             </CardActions>
             {weatherData.error && (
-              <Typography>{weatherData.error.toString()}</Typography>
+              <Typography>{JSON.stringify(weatherData.error)}</Typography>
             )}
             {currentData && (
               <>
