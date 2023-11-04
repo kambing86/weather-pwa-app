@@ -1,4 +1,5 @@
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import Decimal from "decimal.js";
 
 type Person = { name: string; price: number };
 
@@ -15,6 +16,12 @@ const WRONG_INPUT = "Wrong input";
 const BILL_NAME_MESSAGE = "What do you want to name your bill?";
 const NEXT_ITEM_MESSAGE =
   "Let me know the next bill item amount and who share this bill item.";
+const ITEM_EXAMPLE = "You can say, for example:\n12.80 Alice, Bob";
+function getParticipantsMsg(update = false) {
+  return `Who are the ${
+    update ? "additional " : ""
+  }participants?\nYou can say, for example:\nAlice, Bob, Charlie`;
+}
 
 function getBillHistory() {
   let history: Bill[] = [];
@@ -49,8 +56,8 @@ const billsSlice = createSlice({
   initialState,
   reducers: {
     newBill(state) {
-      state.response = BILL_NAME_MESSAGE;
       state.state = "bill";
+      state.response = BILL_NAME_MESSAGE;
     },
     addBill(state, action: PayloadAction<string>) {
       const name = action.payload;
@@ -62,52 +69,52 @@ const billsSlice = createSlice({
         GST: 0,
       });
       state.index = state.history.length - 1;
-      state.response = `OK, we'll name your bill "${name}".
-      
-      Who are the participants?
-      You can say, for example:
-      Alice, Bob, Charlie`;
       state.state = "person";
+      state.response = `OK, we'll name your bill "${name}".\n\n${getParticipantsMsg()}`;
     },
     amendBill(state) {
-      state.response = `Ok, let's amend the bill.
-      
-      Who are the additional participants?`;
+      state.response = `Ok, let's amend the bill.\n\n${getParticipantsMsg(
+        true,
+      )}`;
       state.state = "update";
     },
     addPersons(state, action: PayloadAction<string>) {
       const persons = action.payload.split(",");
+      const uniqueSet = new Set(persons);
+      if (persons.length !== uniqueSet.size)
+        throw new Error("Cannot have duplicate name");
       const index = state.index;
       const currentBill = state.history[index];
-      currentBill.persons = persons.map((name) => ({
-        name: name.trim(),
+      const trimmed = persons.map((n) => n.trim());
+      currentBill.persons = trimmed.map((name) => ({
+        name: name,
         price: 0,
       }));
-      state.response = `${addParticipantsMessage(persons, action.payload)}
-      
-      Let me know the first bill item amount and who share this bill item.
-      You can say, for example:
-      12.80 Alice, Bob`;
+      state.response = `${addParticipantsMessage(
+        persons,
+        trimmed.join(", "),
+      )}\n\nLet me know the first bill item amount and who share this bill item.\n${ITEM_EXAMPLE}`;
       state.state = "item";
     },
     updatePersons(state, action: PayloadAction<string>) {
       const persons = action.payload.split(",");
       const index = state.index;
       const currentBill = state.history[index];
-      for (const person of persons) {
-        const name = person.trim();
+      const trimmed = persons.map((n) => n.trim());
+      for (const name of trimmed) {
         const found = currentBill.persons.find((p) => p.name === name);
         if (found) throw new Error(`Person ${name} already in the list`);
       }
       currentBill.persons = currentBill.persons.concat(
-        persons.map((name) => ({
-          name: name.trim(),
+        trimmed.map((name) => ({
+          name: name,
           price: 0,
         })),
       );
-      state.response = `${addParticipantsMessage(persons, action.payload)}
-      
-      ${NEXT_ITEM_MESSAGE}`;
+      state.response = `${addParticipantsMessage(
+        persons,
+        trimmed.join(", "),
+      )}\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`;
       state.state = "item";
     },
     noUpdatePerson(state) {
@@ -146,18 +153,16 @@ const billsSlice = createSlice({
         allNames.push(thePerson.name);
       }
 
-      state.response = `OK, $${price} for ${allNames.join(", ")}
-      
-      ${NEXT_ITEM_MESSAGE}`;
+      state.response = `OK, $${price} for ${allNames.join(
+        ", ",
+      )}.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`;
     },
     finishItem(state) {
       const index = state.index;
       const currentBill = state.history[index];
       state.response = `Great! Your bill subtotal is $${getSubTotal(
         currentBill,
-      ).toFixed(2)}
-      
-      How much is the service charge?`;
+      ).toFixed(2)}.\n\nHow much is the service charge?`;
       state.state = "serviceTax";
     },
     setServiceTax(state, action: PayloadAction<string>) {
@@ -168,9 +173,7 @@ const billsSlice = createSlice({
       currentBill.serviceTax = serviceTax;
       state.response = `Ok, the service charge is ${serviceTax}%. This equals to $${getServiceCharge(
         currentBill,
-      ).toFixed(2)}.
-      
-      How much is the GST?`;
+      ).toFixed(2)}.\n\nHow much is the GST?`;
       state.state = "GST";
     },
     setGST(state, action: PayloadAction<string>) {
@@ -181,9 +184,7 @@ const billsSlice = createSlice({
       currentBill.GST = gst;
       state.response = `Ok, the GST is ${gst}%. This equals to $${getGST(
         currentBill,
-      ).toFixed(2)}.
-      
-      ${getFinalResponse(currentBill)}`;
+      ).toFixed(2)}.\n\n${getFinalResponse(currentBill)}`;
       state.state = "total";
     },
   },
@@ -214,16 +215,21 @@ function getGST(bill: Bill) {
 }
 
 function getFinalResponse(bill: Bill) {
-  return `Here is your bill "${bill.name}":
-  
-  ${bill.persons
+  const totalStr = getTotal(bill).toFixed(2);
+  let remainingDecimal = new Decimal(totalStr);
+  let returnString = `Here is your bill "${bill.name}":\n\n`;
+  bill.persons
     .sort((a, b) => {
       return a.name.localeCompare(b.name);
     })
-    .map((p) => `${p.name}: $${getPersonCharge(bill, p).toFixed(2)}\n`)
-    .join("")}
-  Total: $${getTotal(bill).toFixed(2)}
-  `;
+    .forEach((p) => {
+      const personCharge = getPersonCharge(bill, p).toFixed(2);
+      remainingDecimal = remainingDecimal.minus(new Decimal(personCharge));
+      returnString += `${p.name}: $${getPersonCharge(bill, p).toFixed(2)}\n`;
+    });
+  returnString += `\nRemaining: $${remainingDecimal.toString()}`;
+  returnString += `\nTotal: $${totalStr}`;
+  return returnString;
 }
 
 function getPersonCharge(bill: Bill, person: Person) {

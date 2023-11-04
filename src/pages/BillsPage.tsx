@@ -96,6 +96,7 @@ const BillsPage = () => {
             {billState === "update" && (
               <Button
                 onClick={() => {
+                  setInput("");
                   setError("");
                   dispatch(billsSlice.actions.noUpdatePerson());
                 }}
@@ -107,6 +108,7 @@ const BillsPage = () => {
             {billState === "item" && (
               <Button
                 onClick={() => {
+                  setInput("");
                   setError("");
                   dispatch(billsSlice.actions.finishItem());
                 }}
@@ -120,6 +122,7 @@ const BillsPage = () => {
                 <Button
                   key={v}
                   onClick={() => {
+                    setInput("");
                     setError("");
                     dispatch(billsSlice.actions.setServiceTax(v.toString()));
                   }}
@@ -133,6 +136,7 @@ const BillsPage = () => {
                 <Button
                   key={v}
                   onClick={() => {
+                    setInput("");
                     setError("");
                     dispatch(billsSlice.actions.setGST(v.toString()));
                   }}
