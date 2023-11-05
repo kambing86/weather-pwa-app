@@ -23,7 +23,7 @@ export const getLocationsByGeolocation = async (
   latitude: number,
   longitude: number,
 ) => {
-  const api = `http://api.openweathermap.org/geo/1.0/reverse`;
+  const api = `https://api.openweathermap.org/geo/1.0/reverse`;
   return (
     await axios.get(api, {
       params: {
