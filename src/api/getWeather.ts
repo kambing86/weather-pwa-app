@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AllWeatherData, CurrentWeatherData, LocationData } from "types/data";
+import { AllWeatherData, LocationData } from "types/data";
 import { API_KEY } from "./common";
 
 const defaultParams = {
@@ -33,34 +33,6 @@ export const getLocationsByGeolocation = async (
       },
     })
   ).data as LocationData[];
-};
-
-export const getCurrentWeatherByCityName = async (city: string) => {
-  const api = `https://api.openweathermap.org/data/2.5/weather`;
-  return (
-    await axios.get(api, {
-      params: {
-        ...defaultParams,
-        q: city.toLowerCase(),
-      },
-    })
-  ).data as CurrentWeatherData;
-};
-
-export const getCurrentWeatherByGeolocation = async (
-  latitude: number,
-  longitude: number,
-) => {
-  const api = `https://api.openweathermap.org/data/2.5/weather`;
-  return (
-    await axios.get(api, {
-      params: {
-        ...defaultParams,
-        lat: latitude,
-        lon: longitude,
-      },
-    })
-  ).data as CurrentWeatherData;
 };
 
 export const getAllWeatherDataByGeolocation = async (

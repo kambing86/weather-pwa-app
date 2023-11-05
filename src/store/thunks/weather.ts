@@ -1,8 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllWeatherDataByGeolocation,
-  getCurrentWeatherByCityName,
-  getCurrentWeatherByGeolocation,
   getLocations,
   getLocationsByGeolocation,
 } from "api/getWeather";
@@ -45,29 +43,5 @@ export const fetchLocationsByGeolocation = createAsyncThunk(
       }),
     );
     return await getLocationsByGeolocation(latitude, longitude);
-  },
-);
-
-export const getCurrentDataByCityName = createAsyncThunk(
-  "weather/getCurrentDataByCityName",
-  async (location: string, { dispatch }) => {
-    const currentWeather = await getCurrentWeatherByCityName(location);
-    const { lat: latitude, lon: longitude } = currentWeather.coord;
-    void dispatch(
-      getAllData({
-        latitude,
-        longitude,
-      }),
-    );
-    return currentWeather;
-  },
-);
-
-export const getCurrentDataByGeolocation = createAsyncThunk(
-  "weather/getCurrentDataByGeolocation",
-  async (coordinate: Coordinate, { dispatch }) => {
-    const { latitude, longitude } = coordinate;
-    void dispatch(getAllData(coordinate));
-    return await getCurrentWeatherByGeolocation(latitude, longitude);
   },
 );
