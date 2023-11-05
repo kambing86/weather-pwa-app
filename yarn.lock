@@ -5869,6 +5869,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"countries-list@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "countries-list@npm:3.0.6"
+  checksum: 8c2a64c01edc26af6ca5414ca0c861fff989c1891a47baff2c3316050636eed893227b055df07de97494a311aaaaf857ff306de95a9fab37fc6a00fc52b079a8
+  languageName: node
+  linkType: hard
+
 "create-jest@npm:^29.7.0":
   version: 29.7.0
   resolution: "create-jest@npm:29.7.0"
@@ -14806,6 +14813,7 @@ __metadata:
     camelcase: "npm:^8.0.0"
     case-sensitive-paths-webpack-plugin: "npm:^2.4.0"
     clsx: "npm:^2.0.0"
+    countries-list: "npm:^3.0.6"
     css-loader: "npm:^6.8.1"
     css-minimizer-webpack-plugin: "npm:^5.0.1"
     decimal.js: "npm:^10.4.3"

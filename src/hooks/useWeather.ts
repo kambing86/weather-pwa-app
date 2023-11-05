@@ -21,6 +21,7 @@ export const useWeather = () => {
       weatherData.loading,
     isLocationFound: currentData.error === undefined,
     location: currentData.data?.name ?? "",
+    country: currentData.data?.sys.country,
     setLocation: weatherThunkActions.getCurrentDataByCityName,
     setPosition,
   };

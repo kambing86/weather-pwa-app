@@ -1,15 +1,18 @@
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { Theme } from "@mui/material/styles";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { memo } from "react";
 import { DARK } from "store/slices/theme.slice";
-import { DailyData } from "types/data";
+import type { DailyData } from "types/data";
 import { DARK_RADIAL_GRADIENT, LIGHT_RADIAL_GRADIENT } from "./constants";
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -61,13 +64,15 @@ const TableDailyData = ({ data }: Props) => {
                 <TableCell align="center">
                   {new Intl.DateTimeFormat().format(date)}
                 </TableCell>
-                <TableCell align="center" className={classes.weatherText}>
-                  <img
-                    src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                    alt={weather.description}
-                    className={classes.iconBackground}
-                  />
-                  {weather.description}
+                <TableCell align="center">
+                  <Typography className={classes.weatherText}>
+                    <img
+                      src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
+                      alt={weather.description}
+                      className={classes.iconBackground}
+                    />
+                    {weather.description}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">{dailyData.temp.min}</TableCell>
                 <TableCell align="center">{dailyData.temp.max}</TableCell>

@@ -24,6 +24,7 @@
     "camelcase": "^8.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "clsx": "^2.0.0",
+    "countries-list": "^3.0.6",
     "css-loader": "^6.8.1",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "decimal.js": "^10.4.3",
