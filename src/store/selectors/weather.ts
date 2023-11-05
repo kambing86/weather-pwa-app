@@ -8,3 +8,7 @@ export const useCurrentWeatherData = () => {
 export const useAllWeatherData = () => {
   return useSelector((state: RootState) => state.weather.all);
 };
+
+export const useLocations = () => {
+  return useSelector((state: RootState) => state.weather.locations);
+};

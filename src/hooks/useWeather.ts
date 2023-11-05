@@ -3,6 +3,7 @@ import { weatherThunkActions } from "store/actions/weather";
 import {
   useAllWeatherData,
   useCurrentWeatherData,
+  useLocations,
 } from "store/selectors/weather";
 
 export const useWeather = () => {
@@ -10,19 +11,23 @@ export const useWeather = () => {
     weatherThunkActions.getCurrentDataByGeolocation({ latitude, longitude });
   }, []);
   const weatherData = useAllWeatherData();
-  const currentData = useCurrentWeatherData();
+  const locationsData = useLocations();
+  const setLocation = useCallback((location: string) => {
+    weatherThunkActions.fetchLocations(location);
+  }, []);
+  const location = locationsData.data?.at(0);
   return {
     weatherData,
-    isInit: currentData.init,
+    isInit: locationsData.init,
     isLoading:
-      !currentData.init ||
-      currentData.loading ||
+      !locationsData.init ||
+      locationsData.loading ||
       !weatherData.init ||
       weatherData.loading,
-    isLocationFound: currentData.error === undefined,
-    location: currentData.data?.name ?? "",
-    country: currentData.data?.sys.country,
-    setLocation: weatherThunkActions.getCurrentDataByCityName,
+    isLocationFound: locationsData.error === undefined,
+    location: location?.name ?? "",
+    country: location?.country,
+    setLocation,
     setPosition,
   };
 };

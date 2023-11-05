@@ -92,3 +92,11 @@ export interface Coordinate {
   latitude: number;
   longitude: number;
 }
+
+export type LocationData = {
+  name: string;
+  local_names: Record<string, string>;
+  lat: number;
+  lon: number;
+  country: string;
+};
