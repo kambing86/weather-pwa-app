@@ -18,6 +18,7 @@ import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useFavorite } from "hooks/useFavorite";
 import { useWeather } from "hooks/useWeather";
 import { memo, useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { DARK } from "store/slices/theme.slice";
 import TableDailyData from "./TableDailyData";
 import { DARK_RADIAL_GRADIENT, LIGHT_RADIAL_GRADIENT } from "./constants";
@@ -53,17 +54,25 @@ const useStyles = makeStyles<Theme>((theme) => ({
 
 const WeatherResult = () => {
   const classes = useStyles();
-  const { weatherData, isInit, isLoading, isLocationFound, location, country } =
+  const { weatherData, isInit, isLoading, isLocationFound, location } =
     useWeather();
-  const { isFavorite, clickFavorite } = useFavorite();
+  const { isFavorite, clickFavorite, getNameFromFavorite } = useFavorite();
   const currentData = weatherData.data?.current;
   const locationRef = useRefInSync(location);
+  const { location: locationFromURL } = useParams<{ location: string }>();
+  const name = useMemo(
+    () => getNameFromFavorite(locationFromURL),
+    [getNameFromFavorite, locationFromURL],
+  );
   const favoriteHandler = useCallback(() => {
-    clickFavorite(locationRef.current);
+    locationRef.current != null && clickFavorite(locationRef.current);
   }, [locationRef, clickFavorite]);
   const countryData = useMemo(
-    () => (country == null ? null : getCountryData(country as TCountryCode)),
-    [country],
+    () =>
+      location != null
+        ? getCountryData(location.country as TCountryCode)
+        : null,
+    [location],
   );
   if (!isInit) {
     return null;
@@ -79,14 +88,15 @@ const WeatherResult = () => {
           <>
             <CardActions>
               <Typography>
-                {location}{" "}
+                {name ?? location?.name}
                 {countryData != null &&
-                  location !== countryData.name &&
-                  ` - ${countryData.name}`}{" "}
-                {country != null && getEmojiFlag(country as TCountryCode)}
+                  location?.name !== countryData.name &&
+                  ` - ${countryData.name}`}
+                {location != null &&
+                  ` ${getEmojiFlag(location.country as TCountryCode)}`}
               </Typography>
               <Button size="small" onClick={favoriteHandler}>
-                {isFavorite(location) ? (
+                {location != null && isFavorite(location) ? (
                   <Icon sx={{ color: "#f50057" }}>favorite</Icon>
                 ) : (
                   <Icon sx={{ color: "#f50057" }}>favorite_border</Icon>

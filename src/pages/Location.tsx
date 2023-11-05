@@ -6,6 +6,7 @@ import WeatherResult from "components/WeatherResult";
 import { useWeather } from "hooks/useWeather";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getGeolocationFromString } from "utils/location";
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {
@@ -17,14 +18,20 @@ const useStyles = makeStyles<Theme>((theme) => ({
 export default function Location() {
   const classes = useStyles();
   const [init, setInit] = useState(false);
-  const { setLocation } = useWeather();
+  const { setLocation, setPosition } = useWeather();
   const { location } = useParams<{ location: string }>();
   useEffect(() => {
     if (location != null) {
-      setLocation(location);
+      const geolocation = getGeolocationFromString(location);
+      if (geolocation != null) {
+        const [lat, lon] = geolocation;
+        setPosition(lat, lon);
+      } else {
+        setLocation(location);
+      }
       setInit(true);
     }
-  }, [setLocation, location]);
+  }, [location, setLocation, setPosition]);
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>

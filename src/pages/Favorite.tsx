@@ -6,6 +6,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
+import {
+  type TCountryCode,
+  getCountryData,
+  getEmojiFlag,
+} from "countries-list";
 import { useFavorite } from "hooks/useFavorite";
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -27,16 +32,43 @@ export default function Favorite() {
         <Grid item xs={12}>
           <Paper elevation={2}>
             <List component="nav" className={classes.list}>
-              {favoriteList.map((location) => (
-                <ListItem
-                  key={location}
-                  button
-                  component="a"
-                  href={`#/location/${location}`}
-                >
-                  <ListItemText primary={location} />
-                </ListItem>
-              ))}
+              {favoriteList.map((location) => {
+                const key =
+                  typeof location === "string"
+                    ? location
+                    : `${location.lat}${encodeURIComponent("|")}${
+                        location.lon
+                      }`;
+                const name =
+                  typeof location === "string" ? location : location.name;
+                const countryData =
+                  typeof location === "string"
+                    ? null
+                    : getCountryData(location.country as TCountryCode);
+                return (
+                  <ListItem
+                    key={key}
+                    button
+                    component="a"
+                    href={`#/location/${key}`}
+                  >
+                    <ListItemText
+                      primary={
+                        <>
+                          {name}
+                          {countryData != null &&
+                            name !== countryData.name &&
+                            ` - ${countryData.name}`}
+                          {typeof location !== "string" &&
+                            ` ${getEmojiFlag(
+                              location.country as TCountryCode,
+                            )}`}
+                        </>
+                      }
+                    />
+                  </ListItem>
+                );
+              })}
               {favoriteList.length === 0 && (
                 <ListItem>
                   No favorite, please add location in Home page
