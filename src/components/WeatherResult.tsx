@@ -54,16 +54,31 @@ const useStyles = makeStyles<Theme>((theme) => ({
 
 const WeatherResult = () => {
   const classes = useStyles();
-  const { weatherData, isInit, isLoading, isLocationFound, location } =
-    useWeather();
-  const { isFavorite, clickFavorite, getNameFromFavorite } = useFavorite();
-  const currentData = weatherData.data?.current;
-  const locationRef = useRefInSync(location);
+  const {
+    weatherData,
+    isInit,
+    isLoading,
+    isLocationFound,
+    location: locationFromAPI,
+  } = useWeather();
   const { location: locationFromURL } = useParams<{ location: string }>();
+  const { isFavorite, clickFavorite, getNameFromFavorite } = useFavorite();
   const name = useMemo(
     () => getNameFromFavorite(locationFromURL),
     [getNameFromFavorite, locationFromURL],
   );
+  const location = useMemo(
+    () =>
+      locationFromAPI == null
+        ? null
+        : {
+            ...locationFromAPI,
+            name: name ?? locationFromAPI.name,
+          },
+    [locationFromAPI, name],
+  );
+  const currentData = weatherData.data?.current;
+  const locationRef = useRefInSync(location);
   const favoriteHandler = useCallback(() => {
     locationRef.current != null && clickFavorite(locationRef.current);
   }, [locationRef, clickFavorite]);

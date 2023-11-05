@@ -11,7 +11,10 @@ export function findLocationIndex(
   } else {
     index = locList.findIndex((l) => {
       if (typeof l === "string") return false;
-      return l.name === location.name && l.country === location.country;
+      return (
+        (l.name === location.name && l.country === location.country) ||
+        (l.lat === location.lat && l.lon === location.lon)
+      );
     });
     if (index === -1) {
       index = locList.findIndex((l) => {
