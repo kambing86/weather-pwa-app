@@ -1,0 +1,9 @@
+.alert_align_center {
+  align-items: center !important;
+
+  :global {
+    .MuiButtonBase-root {
+      height: 100%;
+    }
+  }
+}

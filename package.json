@@ -60,6 +60,7 @@
     "react-router-dom": "^6.18.0",
     "resolve": "^1.22.8",
     "resolve-url-loader": "^5.0.0",
+    "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
     "semver": "^7.5.4",
     "source-map-loader": "^4.0.1",

@@ -5,12 +5,24 @@ import { useIsOffline } from "hooks/useIsOffline";
 import React, { useCallback, useEffect, useState } from "react";
 import usePWA from "react-pwa-install-prompt";
 import { useHasUpdate } from "store/selectors/update";
+import styles from "./PWAPopup.module.scss";
 import TimeoutProgress from "./TimeoutProgress";
 
 const showInstallTime = 10000; // 10 seconds;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => {
-  return <MuiAlert ref={ref} elevation={6} variant="filled" {...props} />;
+  return (
+    <MuiAlert
+      ref={ref}
+      elevation={6}
+      variant="filled"
+      classes={{
+        action: styles.alert_align_center,
+        icon: styles.alert_align_center,
+      }}
+      {...props}
+    />
+  );
 });
 
 const PWAPopup = () => {
