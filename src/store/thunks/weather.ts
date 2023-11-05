@@ -4,6 +4,7 @@ import {
   getCurrentWeatherByCityName,
   getCurrentWeatherByGeolocation,
   getLocations,
+  getLocationsByGeolocation,
 } from "api/getWeather";
 import type { Coordinate } from "types/data";
 
@@ -30,6 +31,20 @@ export const fetchLocations = createAsyncThunk(
       }),
     );
     return locations;
+  },
+);
+
+export const fetchLocationsByGeolocation = createAsyncThunk(
+  "weather/fetchLocationsByGeolocation",
+  async (coordinate: Coordinate, { dispatch }) => {
+    const { latitude, longitude } = coordinate;
+    void dispatch(
+      getAllData({
+        latitude,
+        longitude,
+      }),
+    );
+    return await getLocationsByGeolocation(latitude, longitude);
   },
 );
 

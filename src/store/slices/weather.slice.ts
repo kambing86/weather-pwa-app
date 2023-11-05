@@ -6,6 +6,7 @@ import {
 } from "store/helpers/thunk";
 import {
   fetchLocations,
+  fetchLocationsByGeolocation,
   getAllData,
   getCurrentDataByCityName,
   getCurrentDataByGeolocation,
@@ -37,6 +38,11 @@ const weatherSlice = createSlice({
     handleThunk(builder, getCurrentDataByCityName, (state) => state.current);
     handleThunk(builder, getCurrentDataByGeolocation, (state) => state.current);
     handleThunk(builder, fetchLocations, (state) => state.locations);
+    handleThunk(
+      builder,
+      fetchLocationsByGeolocation,
+      (state) => state.locations,
+    );
   },
 });
 

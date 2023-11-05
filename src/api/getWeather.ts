@@ -19,6 +19,22 @@ export const getLocations = async (city: string) => {
   ).data as LocationData[];
 };
 
+export const getLocationsByGeolocation = async (
+  latitude: number,
+  longitude: number,
+) => {
+  const api = `http://api.openweathermap.org/geo/1.0/reverse`;
+  return (
+    await axios.get(api, {
+      params: {
+        ...defaultParams,
+        lat: latitude,
+        lon: longitude,
+      },
+    })
+  ).data as LocationData[];
+};
+
 export const getCurrentWeatherByCityName = async (city: string) => {
   const api = `https://api.openweathermap.org/data/2.5/weather`;
   return (

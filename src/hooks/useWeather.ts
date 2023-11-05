@@ -4,7 +4,7 @@ import { useAllWeatherData, useLocations } from "store/selectors/weather";
 
 export const useWeather = () => {
   const setPosition = useCallback((latitude: number, longitude: number) => {
-    weatherThunkActions.getCurrentDataByGeolocation({ latitude, longitude });
+    weatherThunkActions.fetchLocationsByGeolocation({ latitude, longitude });
   }, []);
   const weatherData = useAllWeatherData();
   const locationsData = useLocations();
