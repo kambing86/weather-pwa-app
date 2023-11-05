@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { weatherThunkActions } from "store/actions/weather";
-import {
-  useAllWeatherData,
-  useCurrentWeatherData,
-  useLocations,
-} from "store/selectors/weather";
+import { useAllWeatherData, useLocations } from "store/selectors/weather";
 
 export const useWeather = () => {
   const setPosition = useCallback((latitude: number, longitude: number) => {
