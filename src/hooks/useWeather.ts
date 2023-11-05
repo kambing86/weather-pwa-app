@@ -21,8 +21,7 @@ export const useWeather = () => {
       !weatherData.init ||
       weatherData.loading,
     isLocationFound: locationsData.error === undefined,
-    location: location?.name ?? "",
-    country: location?.country,
+    location,
     setLocation,
     setPosition,
   };
