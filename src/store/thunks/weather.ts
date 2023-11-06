@@ -8,16 +8,18 @@ import type { Coordinate } from "types/data";
 
 export const getAllData = createAsyncThunk(
   "weather/getAllData",
-  async (coordinate: Coordinate) => {
+  async (coordinate: Coordinate, { signal }) => {
     const { latitude, longitude } = coordinate;
-    return await getAllWeatherDataByGeolocation(latitude, longitude);
+    return await getAllWeatherDataByGeolocation(latitude, longitude, {
+      signal,
+    });
   },
 );
 
 export const fetchLocations = createAsyncThunk(
   "weather/fetchLocations",
-  async (location: string, { dispatch }) => {
-    const locations = await getLocations(location);
+  async (location: string, { dispatch, signal }) => {
+    const locations = await getLocations(location, { signal });
     const firstLocation = locations.at(0);
     if (firstLocation == null)
       throw new Error(`Location ${location} not found`);
@@ -34,7 +36,7 @@ export const fetchLocations = createAsyncThunk(
 
 export const fetchLocationsByGeolocation = createAsyncThunk(
   "weather/fetchLocationsByGeolocation",
-  async (coordinate: Coordinate, { dispatch }) => {
+  async (coordinate: Coordinate, { dispatch, signal }) => {
     const { latitude, longitude } = coordinate;
     void dispatch(
       getAllData({
@@ -42,6 +44,6 @@ export const fetchLocationsByGeolocation = createAsyncThunk(
         longitude,
       }),
     );
-    return await getLocationsByGeolocation(latitude, longitude);
+    return await getLocationsByGeolocation(latitude, longitude, { signal });
   },
 );

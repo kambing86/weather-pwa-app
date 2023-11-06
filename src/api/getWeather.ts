@@ -7,7 +7,10 @@ const defaultParams = {
   appid: API_KEY,
 };
 
-export const getLocations = async (city: string) => {
+export const getLocations = async (
+  city: string,
+  options: { signal?: AbortSignal } = {},
+) => {
   const api = `https://api.openweathermap.org/geo/1.0/direct`;
   return (
     await axios.get(api, {
@@ -15,6 +18,7 @@ export const getLocations = async (city: string) => {
         ...defaultParams,
         q: city.toLowerCase(),
       },
+      ...options,
     })
   ).data as LocationData[];
 };
@@ -22,6 +26,7 @@ export const getLocations = async (city: string) => {
 export const getLocationsByGeolocation = async (
   latitude: number,
   longitude: number,
+  options: { signal?: AbortSignal } = {},
 ) => {
   const api = `https://api.openweathermap.org/geo/1.0/reverse`;
   return (
@@ -31,6 +36,7 @@ export const getLocationsByGeolocation = async (
         lat: latitude,
         lon: longitude,
       },
+      ...options,
     })
   ).data as LocationData[];
 };
@@ -38,6 +44,7 @@ export const getLocationsByGeolocation = async (
 export const getAllWeatherDataByGeolocation = async (
   latitude: number,
   longitude: number,
+  options: { signal?: AbortSignal } = {},
 ) => {
   const api = `https://api.openweathermap.org/data/2.5/onecall`;
   return (
@@ -48,6 +55,7 @@ export const getAllWeatherDataByGeolocation = async (
         lon: longitude,
         exclude: "minutely,hourly,alerts",
       },
+      ...options,
     })
   ).data as AllWeatherData;
 };
