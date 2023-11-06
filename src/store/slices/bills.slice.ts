@@ -118,9 +118,7 @@ const billsSlice = createSlice({
       state.state = "item";
     },
     noUpdatePerson(state) {
-      state.response = `Ok, no additional participants.
-      
-      ${NEXT_ITEM_MESSAGE}`;
+      state.response = `Ok, no additional participants.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`;
       state.state = "item";
     },
     addItem(state, action: PayloadAction<string>) {
