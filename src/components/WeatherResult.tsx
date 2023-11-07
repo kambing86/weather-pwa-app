@@ -9,17 +9,14 @@ import {
 } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import {
-  type TCountryCode,
-  getCountryData,
-  getEmojiFlag,
-} from "countries-list";
+import { type TCountryCode, getCountryData } from "countries-list";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
 import { useFavorite } from "hooks/useFavorite";
 import { useWeather } from "hooks/useWeather";
 import { memo, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { DARK } from "store/slices/theme.slice";
+import CountryFlag from "./CountryFlag";
 import TableDailyData from "./TableDailyData";
 import { DARK_RADIAL_GRADIENT, LIGHT_RADIAL_GRADIENT } from "./constants";
 
@@ -32,6 +29,10 @@ const useStyles = makeStyles<Theme>((theme) => ({
     [theme.breakpoints.up("sm")]: {
       padding: theme.spacing(2),
     },
+  },
+  name: {
+    display: "flex",
+    alignItems: "center",
   },
   iconBackground: {
     background:
@@ -102,13 +103,14 @@ const WeatherResult = () => {
         {isLocationFound && (
           <>
             <CardActions>
-              <Typography>
+              <Typography className={classes.name}>
                 {name ?? location?.name}
                 {countryData != null &&
                   location?.name !== countryData.name &&
                   ` - ${countryData.name}`}
-                {location != null &&
-                  ` ${getEmojiFlag(location.country as TCountryCode)}`}
+                {location != null && (
+                  <CountryFlag countryCode={location.country} fontSize="2rem" />
+                )}
               </Typography>
               <Button size="small" onClick={favoriteHandler}>
                 {location != null && isFavorite(location) ? (

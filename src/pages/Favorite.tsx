@@ -6,11 +6,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import {
-  type TCountryCode,
-  getCountryData,
-  getEmojiFlag,
-} from "countries-list";
+import CountryFlag from "components/CountryFlag";
+import { type TCountryCode, getCountryData } from "countries-list";
 import { useFavorite } from "hooks/useFavorite";
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -59,10 +56,9 @@ export default function Favorite() {
                           {countryData != null &&
                             name !== countryData.name &&
                             ` - ${countryData.name}`}
-                          {typeof location !== "string" &&
-                            ` ${getEmojiFlag(
-                              location.country as TCountryCode,
-                            )}`}
+                          {typeof location !== "string" && (
+                            <CountryFlag countryCode={location.country} />
+                          )}
                         </>
                       }
                     />
