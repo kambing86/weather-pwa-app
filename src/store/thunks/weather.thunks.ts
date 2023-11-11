@@ -24,12 +24,18 @@ export const fetchLocations = createAsyncThunk(
     if (firstLocation == null)
       throw new Error(`Location ${location} not found`);
     const { lat: latitude, lon: longitude } = firstLocation;
-    void dispatch(
+    const promise = dispatch(
       getAllData({
         latitude,
         longitude,
       }),
     );
+    function abort() {
+      promise.abort();
+      signal.removeEventListener("abort", abort);
+    }
+    signal.addEventListener("abort", abort);
+    await promise;
     return locations;
   },
 );
@@ -38,12 +44,21 @@ export const fetchLocationsByGeolocation = createAsyncThunk(
   "weather/fetchLocationsByGeolocation",
   async (coordinate: Coordinate, { dispatch, signal }) => {
     const { latitude, longitude } = coordinate;
-    void dispatch(
+    const locationPromise = getLocationsByGeolocation(latitude, longitude, {
+      signal,
+    });
+    const allDataThunk = dispatch(
       getAllData({
         latitude,
         longitude,
       }),
     );
-    return await getLocationsByGeolocation(latitude, longitude, { signal });
+    function abort() {
+      allDataThunk.abort();
+      signal.removeEventListener("abort", abort);
+    }
+    signal.addEventListener("abort", abort);
+    const [location] = await Promise.all([locationPromise, allDataThunk]);
+    return location;
   },
 );

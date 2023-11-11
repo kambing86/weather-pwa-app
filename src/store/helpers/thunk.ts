@@ -35,6 +35,7 @@ export function handleThunk<State, ReturnData, Args>(
     .addCase(asyncThunk.fulfilled, (state, action) => {
       const thunkState = mapFunc(state);
       thunkState.loading = false;
+      thunkState.error = undefined;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       thunkState.data = action.payload;

@@ -8,7 +8,7 @@ import {
   fetchLocations,
   fetchLocationsByGeolocation,
   getAllData,
-} from "store/thunks/weather";
+} from "store/thunks/weather.thunks";
 import type { AllWeatherData, LocationData } from "types/data";
 
 type WeatherState = {

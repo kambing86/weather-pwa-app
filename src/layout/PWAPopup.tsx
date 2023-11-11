@@ -4,7 +4,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { useIsOffline } from "hooks/useIsOffline";
 import React, { useCallback, useEffect, useState } from "react";
 import usePWA from "react-pwa-install-prompt";
-import { useHasUpdate } from "store/selectors/update";
+import { useHasUpdate } from "store/selectors/update.selectors";
 import styles from "./PWAPopup.module.scss";
 import TimeoutProgress from "./TimeoutProgress";
 

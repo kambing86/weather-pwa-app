@@ -1,16 +1,49 @@
-import { useCallback, useEffect, useState } from "react";
-import { weatherThunkActions } from "store/actions/weather";
-import { useAllWeatherData, useLocations } from "store/selectors/weather";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "store";
+import {
+  useAllWeatherData,
+  useLocations,
+} from "store/selectors/weather.selectors";
+import * as weatherThunk from "store/thunks/weather.thunks";
 
 export const useWeather = () => {
-  const setPosition = useCallback((latitude: number, longitude: number) => {
-    weatherThunkActions.fetchLocationsByGeolocation({ latitude, longitude });
-  }, []);
+  const dispatch = useDispatch<AppDispatch>();
+  const cancelCallback = useRef<(() => void) | null>(null);
   const weatherData = useAllWeatherData();
   const locationsData = useLocations();
-  const setLocation = useCallback((location: string) => {
-    weatherThunkActions.fetchLocations(location);
-  }, []);
+  const setLocation = useCallback(
+    (location: string) => {
+      cancelCallback.current?.();
+      async function fetchLocations() {
+        const promise = dispatch(weatherThunk.fetchLocations(location));
+        cancelCallback.current = promise.abort;
+        await promise;
+        cancelCallback.current = null;
+      }
+      setTimeout(() => {
+        void fetchLocations();
+      }, 0);
+    },
+    [dispatch],
+  );
+  const setPosition = useCallback(
+    (latitude: number, longitude: number) => {
+      cancelCallback.current?.();
+      async function fetchLocationsByGeolocation() {
+        const promise = dispatch(
+          weatherThunk.fetchLocationsByGeolocation({ latitude, longitude }),
+        );
+        cancelCallback.current = promise.abort;
+        await promise;
+        cancelCallback.current = null;
+      }
+      setTimeout(() => {
+        void fetchLocationsByGeolocation();
+      }, 0);
+    },
+    [dispatch],
+  );
   const location = locationsData.data?.at(0);
   return {
     weatherData,
@@ -29,6 +62,7 @@ export const useWeather = () => {
 
 export const useWeatherAtHomepage = () => {
   const { setLocation, setPosition } = useWeather();
+  const ignoreSensorRef = useRef(false);
   const [isGettingLocation, setIsGettingLocation] = useState(true);
   useEffect(() => {
     let cleanup = false;
@@ -37,6 +71,7 @@ export const useWeatherAtHomepage = () => {
         (position) => {
           if (cleanup) return;
           setIsGettingLocation(false);
+          if (ignoreSensorRef.current) return;
           const { latitude, longitude } = position.coords;
           setPosition(latitude, longitude);
         },
@@ -55,6 +90,13 @@ export const useWeatherAtHomepage = () => {
   }, [setPosition]);
   return {
     isGettingLocation,
-    setLocation,
+    setLocation: useCallback(
+      (location: string) => {
+        ignoreSensorRef.current = true;
+        setIsGettingLocation(false);
+        setLocation(location);
+      },
+      [setLocation],
+    ),
   };
 };
