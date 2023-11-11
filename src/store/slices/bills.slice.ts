@@ -16,7 +16,8 @@ const WRONG_INPUT = "Wrong input";
 const BILL_NAME_MESSAGE = "What do you want to name your bill?";
 const NEXT_ITEM_MESSAGE =
   "Let me know the next bill item amount and who share this bill item.";
-const ITEM_EXAMPLE = "You can say, for example:\n12.80 Alice, Bob";
+const ITEM_EXAMPLE =
+  "You can say, for example:\n12.80 Alice, Bob\n50 All\n30 except Charlie";
 function getParticipantsMsg(update = false) {
   return `Who are the ${
     update ? "additional " : ""
@@ -85,12 +86,18 @@ const billsSlice = createSlice({
       state.index = state.history.length - 1;
       state.state = BillState.Person;
       state.messages.push({
-        msg: `OK, we'll name your bill "${name}".\n\n${getParticipantsMsg()}`,
+        msg: `OK, we'll name your bill "${name}".`,
+      });
+      state.messages.push({
+        msg: getParticipantsMsg(),
       });
     },
     amendBill(state) {
       state.messages.push({
-        msg: `Ok, let's amend the bill.\n\n${getParticipantsMsg(true)}`,
+        msg: `Ok, let's amend the bill.`,
+      });
+      state.messages.push({
+        msg: getParticipantsMsg(true),
       });
       state.state = BillState.Update;
     },
@@ -107,10 +114,10 @@ const billsSlice = createSlice({
         price: 0,
       }));
       state.messages.push({
-        msg: `${addParticipantsMessage(
-          persons,
-          trimmed.join(", "),
-        )}\n\nLet me know the first bill item amount and who share this bill item.\n${ITEM_EXAMPLE}`,
+        msg: addParticipantsMessage(persons, trimmed.join(", ")),
+      });
+      state.messages.push({
+        msg: `Let me know the first bill item amount and who share this bill item.\n${ITEM_EXAMPLE}`,
       });
       state.state = BillState.Item;
     },
@@ -121,7 +128,7 @@ const billsSlice = createSlice({
       const trimmed = persons.map((n) => n.trim());
       for (const name of trimmed) {
         const found = currentBill.persons.find((p) => p.name === name);
-        if (found) throw new Error(`Person ${name} already in the list`);
+        if (found) throw new Error(`Person "${name}" is already in the list`);
       }
       currentBill.persons = currentBill.persons.concat(
         trimmed.map((name) => ({
@@ -130,16 +137,17 @@ const billsSlice = createSlice({
         })),
       );
       state.messages.push({
-        msg: `${addParticipantsMessage(
-          persons,
-          trimmed.join(", "),
-        )}\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
+        msg: addParticipantsMessage(persons, trimmed.join(", ")),
       });
+      state.messages.push({ msg: `${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}` });
       state.state = BillState.Item;
     },
     noUpdatePerson(state) {
       state.messages.push({
-        msg: `Ok, no additional participants.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
+        msg: `Ok, no additional participants.`,
+      });
+      state.messages.push({
+        msg: `${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
       });
       state.state = BillState.Item;
     },
@@ -150,12 +158,18 @@ const billsSlice = createSlice({
 
       const price = parseFloat(record.slice(0, firstSpaceIndex));
       if (Number.isNaN(price)) throw new Error(WRONG_INPUT);
-      const persons = record.slice(firstSpaceIndex + 1).split(",");
-      if (persons.length === 0) throw new Error(WRONG_INPUT);
 
       const index = state.index;
       const currentBill = state.history[index];
       const currentPersons = currentBill.persons;
+
+      const personsStr = record
+        .slice(firstSpaceIndex + 1)
+        .trim()
+        .toLowerCase();
+      const persons = getPersons(currentPersons, personsStr);
+      if (persons.length === 0) throw new Error(WRONG_INPUT);
+
       const pricePerPerson = price / persons.length;
       const allNames: string[] = [];
       for (const person of persons) {
@@ -174,9 +188,10 @@ const billsSlice = createSlice({
       }
 
       state.messages.push({
-        msg: `OK, $${price} for ${allNames.join(
-          ", ",
-        )}.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
+        msg: `OK, $${price} for ${allNames.join(", ")}.`,
+      });
+      state.messages.push({
+        msg: NEXT_ITEM_MESSAGE,
       });
     },
     finishItem(state) {
@@ -185,7 +200,10 @@ const billsSlice = createSlice({
       state.messages.push({
         msg: `Great! Your bill subtotal is $${getSubTotal(currentBill).toFixed(
           2,
-        )}.\n\nHow much is the service charge?`,
+        )}.`,
+      });
+      state.messages.push({
+        msg: `How much is the service charge?`,
       });
       state.state = BillState.ServiceTax;
     },
@@ -198,7 +216,10 @@ const billsSlice = createSlice({
       state.messages.push({
         msg: `Ok, the service charge is ${serviceTax}%. This equals to $${getServiceCharge(
           currentBill,
-        ).toFixed(2)}.\n\nHow much is the GST?`,
+        ).toFixed(2)}.`,
+      });
+      state.messages.push({
+        msg: `How much is the GST?`,
       });
       state.state = BillState.GST;
     },
@@ -211,12 +232,38 @@ const billsSlice = createSlice({
       state.messages.push({
         msg: `Ok, the GST is ${gst}%. This equals to $${getGST(
           currentBill,
-        ).toFixed(2)}.\n\n${getFinalResponse(currentBill)}`,
+        ).toFixed(2)}.`,
+      });
+      state.messages.push({
+        msg: getFinalResponse(currentBill),
       });
       state.state = BillState.Total;
     },
   },
 });
+
+function getPersons(persons: Person[], personsStr: string) {
+  const isAll = personsStr === "all";
+  const isExcept =
+    personsStr.startsWith("except") || personsStr.startsWith("all except");
+  if (isAll) return persons.map((p) => p.name);
+  if (isExcept) {
+    const exceptPersons = personsStr
+      .replace(/^(all\s)?except\s/, "")
+      .split(",");
+    let names: string[] = persons.map((p) => p.name);
+    for (const personToRemove of exceptPersons) {
+      const filtered = names.filter((name) =>
+        name.toLowerCase().startsWith(personToRemove.trim().toLowerCase()),
+      );
+      if (filtered.length !== 1) throw new Error(WRONG_INPUT);
+      const index = names.findIndex((n) => n === filtered[0]);
+      names = names.toSpliced(index, 1);
+    }
+    return names;
+  }
+  return personsStr.split(",");
+}
 
 function addParticipantsMessage(persons: string[], message: string) {
   return `I have added ${persons.length} participant${

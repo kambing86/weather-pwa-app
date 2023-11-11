@@ -35,6 +35,11 @@ const useStyles = makeStyles<Theme>(() => ({
   },
 }));
 
+const NO_ADDITION = "No addition";
+const THATS_ALL = "That's all";
+const NEW_BILL = "New Bill";
+const AMEND_BILL = "Amend Bill";
+
 const BillsPage = () => {
   const classes = useStyles();
   const [input, setInput] = useState("");
@@ -104,7 +109,12 @@ const BillsPage = () => {
           ref={scrollableGridRef}
           item
           xs={12}
-          sx={{ flex: "1 0 0 !important", overflow: "auto" }}
+          sx={{
+            display: "flex",
+            flexFlow: "column nowrap",
+            flex: "1 0 0 !important",
+            overflow: "auto",
+          }}
         >
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -116,9 +126,10 @@ const BillsPage = () => {
           </Snackbar>
           <Stack
             direction="column"
-            justifyContent="flex-start"
+            justifyContent="flex-end"
             alignItems="center"
             spacing={2}
+            sx={{ flex: "1 0 0 !important" }}
           >
             {messages.map(({ msg, isUser }, index) => (
               <Card
@@ -147,22 +158,24 @@ const BillsPage = () => {
               <Button
                 onClick={() => {
                   setInput("");
+                  dispatch(billsSlice.actions.addUserMessage(NO_ADDITION));
                   dispatch(billsSlice.actions.noUpdatePerson());
                 }}
                 variant="contained"
               >
-                No addition
+                {NO_ADDITION}
               </Button>
             )}
             {billState === BillState.Item && (
               <Button
                 onClick={() => {
                   setInput("");
+                  dispatch(billsSlice.actions.addUserMessage(THATS_ALL));
                   dispatch(billsSlice.actions.finishItem());
                 }}
                 variant="contained"
               >
-                That's all
+                {THATS_ALL}
               </Button>
             )}
             {billState === BillState.ServiceTax &&
@@ -171,6 +184,7 @@ const BillsPage = () => {
                   key={v}
                   onClick={() => {
                     setInput("");
+                    dispatch(billsSlice.actions.addUserMessage(`${v}%`));
                     dispatch(billsSlice.actions.setServiceTax(v.toString()));
                   }}
                   variant="contained"
@@ -184,6 +198,7 @@ const BillsPage = () => {
                   key={v}
                   onClick={() => {
                     setInput("");
+                    dispatch(billsSlice.actions.addUserMessage(`${v}%`));
                     dispatch(billsSlice.actions.setGST(v.toString()));
                   }}
                   variant="contained"
@@ -195,19 +210,21 @@ const BillsPage = () => {
               <>
                 <Button
                   onClick={() => {
+                    dispatch(billsSlice.actions.addUserMessage(NEW_BILL));
                     dispatch(billsSlice.actions.newBill());
                   }}
                   variant="contained"
                 >
-                  New Bill
+                  {NEW_BILL}
                 </Button>
                 <Button
                   onClick={() => {
+                    dispatch(billsSlice.actions.addUserMessage(AMEND_BILL));
                     dispatch(billsSlice.actions.amendBill());
                   }}
                   variant="contained"
                 >
-                  Amend Bill
+                  {AMEND_BILL}
                 </Button>
               </>
             )}
