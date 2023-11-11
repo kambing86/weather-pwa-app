@@ -6,7 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import CountryFlag from "components/CountryFlag";
+import CountryFlag from "components/weather/CountryFlag";
 import { type TCountryCode, getCountryData } from "countries-list";
 import { useFavorite } from "hooks/useFavorite";
 

@@ -7,6 +7,7 @@ import { ErrorPage, preloadAll } from "preload";
 import { Suspense, useCallback, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { HashRouter as Router } from "react-router-dom";
+import "./App.scss";
 
 function App() {
   const { theme } = useAppTheme();

@@ -12,6 +12,9 @@ import TopSideBar from "./TopSideBar";
 const useStyles = makeStyles<Theme>((theme) => ({
   contentWrapper: {
     flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "auto",
   },
   appBarSpacer: theme.mixins.toolbar,
 }));

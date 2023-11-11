@@ -8,14 +8,23 @@ import {
   Grid,
   Input,
   InputLabel,
+  Snackbar,
+  Stack,
   Theme,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
-import billsSlice from "store/slices/bills.slice";
+import billsSlice, { BillState } from "store/slices/bills.slice";
 
 const serviceTax = [0, 5, 10];
 const gst = [0, 7, 8, 9, 10, 11];
@@ -29,41 +38,40 @@ const useStyles = makeStyles<Theme>(() => ({
 const BillsPage = () => {
   const classes = useStyles();
   const [input, setInput] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRefInSync(input);
   const inputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(event.target.value);
   }, []);
   const billState = useSelector((state: RootState) => state.bills.state);
   const billStateRef = useRefInSync(billState);
-  const response = useSelector((state: RootState) => state.bills.response);
+  const messages = useSelector((state: RootState) => state.bills.messages);
   const dispatch = useDispatch();
   const formSubmitHandler = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
-      setError("");
       const inputText = inputRef.current.trim();
       if (inputText === "") return;
+      dispatch(billsSlice.actions.addUserMessage(inputText));
       const currentState = billStateRef.current;
       try {
         switch (currentState) {
-          case "bill":
+          case BillState.Bill:
             dispatch(billsSlice.actions.addBill(inputText));
             break;
-          case "person":
+          case BillState.Person:
             dispatch(billsSlice.actions.addPersons(inputText));
             break;
-          case "update":
+          case BillState.Update:
             dispatch(billsSlice.actions.updatePersons(inputText));
             break;
-          case "item":
+          case BillState.Item:
             dispatch(billsSlice.actions.addItem(inputText));
             break;
-          case "serviceTax":
+          case BillState.ServiceTax:
             dispatch(billsSlice.actions.setServiceTax(inputText));
             break;
-          case "GST":
+          case BillState.GST:
             dispatch(billsSlice.actions.setGST(inputText));
             break;
         }
@@ -74,30 +82,71 @@ const BillsPage = () => {
     },
     [inputRef, billStateRef, dispatch],
   );
+  const scrollableGridRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const grid = scrollableGridRef.current;
+    if (grid) {
+      const maxHeight = grid.scrollHeight;
+      grid.scrollTo({
+        top: maxHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages.length]);
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          {error !== "" && <Alert severity="error">{error}</Alert>}
-          {response !== "" && (
-            <Card variant="elevation">
-              <CardContent className={classes.response}>{response}</CardContent>
-            </Card>
-          )}
+    <Container maxWidth="lg" sx={{ flex: "1 0 auto", pt: 2 }}>
+      <Grid
+        container
+        spacing={3}
+        sx={{ flexFlow: "column nowrap", height: "100%" }}
+      >
+        <Grid
+          ref={scrollableGridRef}
+          item
+          xs={12}
+          sx={{ flex: "1 0 0 !important", overflow: "auto" }}
+        >
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={error != null}
+            autoHideDuration={5000}
+            onClose={() => setError(null)}
+          >
+            <Alert severity="error">{error}</Alert>
+          </Snackbar>
+          <Stack
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={2}
+          >
+            {messages.map(({ msg, isUser }, index) => (
+              <Card
+                key={index}
+                variant="outlined"
+                sx={{
+                  alignSelf: isUser ? "flex-end" : "flex-start",
+                  bgcolor: isUser ? "primary.main" : null,
+                  color: isUser ? "primary.contrastText" : null,
+                }}
+              >
+                <CardContent className={classes.response}>{msg}</CardContent>
+              </Card>
+            ))}
+          </Stack>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ flex: "0 0 0 !important" }}>
           <form noValidate autoComplete="off" onSubmit={formSubmitHandler}>
-            {billState !== "total" && (
+            {billState !== BillState.Total && (
               <FormControl fullWidth>
                 <InputLabel>Input</InputLabel>
                 <Input value={input} onChange={inputChange} />
               </FormControl>
             )}
-            {billState === "update" && (
+            {billState === BillState.Update && (
               <Button
                 onClick={() => {
                   setInput("");
-                  setError("");
                   dispatch(billsSlice.actions.noUpdatePerson());
                 }}
                 variant="contained"
@@ -105,11 +154,10 @@ const BillsPage = () => {
                 No addition
               </Button>
             )}
-            {billState === "item" && (
+            {billState === BillState.Item && (
               <Button
                 onClick={() => {
                   setInput("");
-                  setError("");
                   dispatch(billsSlice.actions.finishItem());
                 }}
                 variant="contained"
@@ -117,13 +165,12 @@ const BillsPage = () => {
                 That's all
               </Button>
             )}
-            {billState === "serviceTax" &&
+            {billState === BillState.ServiceTax &&
               serviceTax.map((v) => (
                 <Button
                   key={v}
                   onClick={() => {
                     setInput("");
-                    setError("");
                     dispatch(billsSlice.actions.setServiceTax(v.toString()));
                   }}
                   variant="contained"
@@ -131,13 +178,12 @@ const BillsPage = () => {
                   {v}%
                 </Button>
               ))}
-            {billState === "GST" &&
+            {billState === BillState.GST &&
               gst.map((v) => (
                 <Button
                   key={v}
                   onClick={() => {
                     setInput("");
-                    setError("");
                     dispatch(billsSlice.actions.setGST(v.toString()));
                   }}
                   variant="contained"
@@ -145,21 +191,21 @@ const BillsPage = () => {
                   {v}%
                 </Button>
               ))}
-            {billState === "total" && (
+            {billState === BillState.Total && (
               <>
                 <Button
                   onClick={() => {
-                    setError("");
                     dispatch(billsSlice.actions.newBill());
                   }}
+                  variant="contained"
                 >
                   New Bill
                 </Button>
                 <Button
                   onClick={() => {
-                    setError("");
                     dispatch(billsSlice.actions.amendBill());
                   }}
+                  variant="contained"
                 >
                   Amend Bill
                 </Button>

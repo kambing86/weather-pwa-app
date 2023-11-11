@@ -37,27 +37,41 @@ function getBillHistory() {
   return history;
 }
 
+export enum BillState {
+  Init = "init",
+  Bill = "bill",
+  Update = "update",
+  Person = "person",
+  Item = "item",
+  ServiceTax = "serviceTax",
+  GST = "GST",
+  Total = "total",
+}
+
 type State = Readonly<{
   index: number;
   history: Bill[];
-  state: "bill" | "update" | "person" | "item" | "serviceTax" | "GST" | "total";
-  response: string;
+  state: BillState;
+  messages: Array<{ msg: string; isUser?: boolean }>;
 }>;
 
 const initialState: State = {
   index: -1,
   history: getBillHistory(),
-  state: "bill",
-  response: BILL_NAME_MESSAGE,
+  state: BillState.Bill,
+  messages: [{ msg: BILL_NAME_MESSAGE }],
 };
 
 const billsSlice = createSlice({
   name: "bills",
   initialState,
   reducers: {
+    addUserMessage(state, action: PayloadAction<string>) {
+      state.messages.push({ msg: action.payload, isUser: true });
+    },
     newBill(state) {
-      state.state = "bill";
-      state.response = BILL_NAME_MESSAGE;
+      state.state = BillState.Bill;
+      state.messages.push({ msg: BILL_NAME_MESSAGE });
     },
     addBill(state, action: PayloadAction<string>) {
       const name = action.payload;
@@ -69,14 +83,16 @@ const billsSlice = createSlice({
         GST: 0,
       });
       state.index = state.history.length - 1;
-      state.state = "person";
-      state.response = `OK, we'll name your bill "${name}".\n\n${getParticipantsMsg()}`;
+      state.state = BillState.Person;
+      state.messages.push({
+        msg: `OK, we'll name your bill "${name}".\n\n${getParticipantsMsg()}`,
+      });
     },
     amendBill(state) {
-      state.response = `Ok, let's amend the bill.\n\n${getParticipantsMsg(
-        true,
-      )}`;
-      state.state = "update";
+      state.messages.push({
+        msg: `Ok, let's amend the bill.\n\n${getParticipantsMsg(true)}`,
+      });
+      state.state = BillState.Update;
     },
     addPersons(state, action: PayloadAction<string>) {
       const persons = action.payload.split(",");
@@ -90,11 +106,13 @@ const billsSlice = createSlice({
         name: name,
         price: 0,
       }));
-      state.response = `${addParticipantsMessage(
-        persons,
-        trimmed.join(", "),
-      )}\n\nLet me know the first bill item amount and who share this bill item.\n${ITEM_EXAMPLE}`;
-      state.state = "item";
+      state.messages.push({
+        msg: `${addParticipantsMessage(
+          persons,
+          trimmed.join(", "),
+        )}\n\nLet me know the first bill item amount and who share this bill item.\n${ITEM_EXAMPLE}`,
+      });
+      state.state = BillState.Item;
     },
     updatePersons(state, action: PayloadAction<string>) {
       const persons = action.payload.split(",");
@@ -111,15 +129,19 @@ const billsSlice = createSlice({
           price: 0,
         })),
       );
-      state.response = `${addParticipantsMessage(
-        persons,
-        trimmed.join(", "),
-      )}\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`;
-      state.state = "item";
+      state.messages.push({
+        msg: `${addParticipantsMessage(
+          persons,
+          trimmed.join(", "),
+        )}\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
+      });
+      state.state = BillState.Item;
     },
     noUpdatePerson(state) {
-      state.response = `Ok, no additional participants.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`;
-      state.state = "item";
+      state.messages.push({
+        msg: `Ok, no additional participants.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
+      });
+      state.state = BillState.Item;
     },
     addItem(state, action: PayloadAction<string>) {
       const record = action.payload;
@@ -151,17 +173,21 @@ const billsSlice = createSlice({
         allNames.push(thePerson.name);
       }
 
-      state.response = `OK, $${price} for ${allNames.join(
-        ", ",
-      )}.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`;
+      state.messages.push({
+        msg: `OK, $${price} for ${allNames.join(
+          ", ",
+        )}.\n\n${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
+      });
     },
     finishItem(state) {
       const index = state.index;
       const currentBill = state.history[index];
-      state.response = `Great! Your bill subtotal is $${getSubTotal(
-        currentBill,
-      ).toFixed(2)}.\n\nHow much is the service charge?`;
-      state.state = "serviceTax";
+      state.messages.push({
+        msg: `Great! Your bill subtotal is $${getSubTotal(currentBill).toFixed(
+          2,
+        )}.\n\nHow much is the service charge?`,
+      });
+      state.state = BillState.ServiceTax;
     },
     setServiceTax(state, action: PayloadAction<string>) {
       const index = state.index;
@@ -169,10 +195,12 @@ const billsSlice = createSlice({
       const serviceTax = parseFloat(action.payload);
       if (Number.isNaN(serviceTax)) throw new Error(WRONG_INPUT);
       currentBill.serviceTax = serviceTax;
-      state.response = `Ok, the service charge is ${serviceTax}%. This equals to $${getServiceCharge(
-        currentBill,
-      ).toFixed(2)}.\n\nHow much is the GST?`;
-      state.state = "GST";
+      state.messages.push({
+        msg: `Ok, the service charge is ${serviceTax}%. This equals to $${getServiceCharge(
+          currentBill,
+        ).toFixed(2)}.\n\nHow much is the GST?`,
+      });
+      state.state = BillState.GST;
     },
     setGST(state, action: PayloadAction<string>) {
       const index = state.index;
@@ -180,10 +208,12 @@ const billsSlice = createSlice({
       const gst = parseFloat(action.payload);
       if (Number.isNaN(gst)) throw new Error(WRONG_INPUT);
       currentBill.GST = gst;
-      state.response = `Ok, the GST is ${gst}%. This equals to $${getGST(
-        currentBill,
-      ).toFixed(2)}.\n\n${getFinalResponse(currentBill)}`;
-      state.state = "total";
+      state.messages.push({
+        msg: `Ok, the GST is ${gst}%. This equals to $${getGST(
+          currentBill,
+        ).toFixed(2)}.\n\n${getFinalResponse(currentBill)}`,
+      });
+      state.state = BillState.Total;
     },
   },
 });
