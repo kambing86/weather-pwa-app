@@ -1,47 +1,14 @@
-import {
-  Alert,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  FormControl,
-  Grid,
-  Input,
-  InputLabel,
-  Snackbar,
-  Stack,
-  Theme,
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { Container, FormControl, Grid, Input, InputLabel } from "@mui/material";
+import ActionButtons from "components/bills/ActionButtons";
+import ErrorContainer from "components/bills/ErrorContainer";
+import MessageList from "components/bills/MessageList";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
-import {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import billsSlice, { BillState } from "store/slices/bills.slice";
 
-const serviceTax = [0, 5, 10];
-const gst = [0, 7, 8, 9, 10, 11];
-
-const useStyles = makeStyles<Theme>(() => ({
-  response: {
-    whiteSpace: "pre-line",
-  },
-}));
-
-const NO_ADDITION = "No addition";
-const THATS_ALL = "That's all";
-const NEW_BILL = "New Bill";
-const AMEND_BILL = "Amend Bill";
-
 const BillsPage = () => {
-  const classes = useStyles();
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRefInSync(input);
@@ -50,7 +17,6 @@ const BillsPage = () => {
   }, []);
   const billState = useSelector((state: RootState) => state.bills.state);
   const billStateRef = useRefInSync(billState);
-  const messages = useSelector((state: RootState) => state.bills.messages);
   const dispatch = useDispatch();
   const formSubmitHandler = useCallback(
     (event: FormEvent) => {
@@ -87,146 +53,29 @@ const BillsPage = () => {
     },
     [inputRef, billStateRef, dispatch],
   );
-  const scrollableGridRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const grid = scrollableGridRef.current;
-    if (grid) {
-      const maxHeight = grid.scrollHeight;
-      grid.scrollTo({
-        top: maxHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages.length]);
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+  const clearInput = useCallback(() => {
+    setInput("");
+  }, []);
   return (
     <Container maxWidth="lg" sx={{ flex: "1 0 auto", pt: 2 }}>
+      <ErrorContainer error={error} clearError={clearError} />
       <Grid
         container
         spacing={3}
         sx={{ flexFlow: "column nowrap", height: "100%" }}
       >
-        <Grid
-          ref={scrollableGridRef}
-          item
-          xs={12}
-          sx={{
-            display: "flex",
-            flexFlow: "column nowrap",
-            flex: "1 0 0 !important",
-            overflow: "auto",
-          }}
-        >
-          <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            open={error != null}
-            autoHideDuration={5000}
-            onClose={() => setError(null)}
-          >
-            <Alert severity="error">{error}</Alert>
-          </Snackbar>
-          <Stack
-            direction="column"
-            justifyContent="flex-end"
-            alignItems="center"
-            spacing={2}
-            sx={{ flex: "1 0 0 !important" }}
-          >
-            {messages.map(({ msg, isUser }, index) => (
-              <Card
-                key={index}
-                variant="outlined"
-                sx={{
-                  alignSelf: isUser ? "flex-end" : "flex-start",
-                  bgcolor: isUser ? "primary.main" : null,
-                  color: isUser ? "primary.contrastText" : null,
-                }}
-              >
-                <CardContent className={classes.response}>{msg}</CardContent>
-              </Card>
-            ))}
-          </Stack>
-        </Grid>
+        <MessageList />
         <Grid item xs={12} sx={{ flex: "0 0 0 !important" }}>
           <form noValidate autoComplete="off" onSubmit={formSubmitHandler}>
+            <ActionButtons onClick={clearInput} />
             {billState !== BillState.Total && (
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ mt: 2 }}>
                 <InputLabel>Input</InputLabel>
                 <Input value={input} onChange={inputChange} />
               </FormControl>
-            )}
-            {billState === BillState.Update && (
-              <Button
-                onClick={() => {
-                  setInput("");
-                  dispatch(billsSlice.actions.addUserMessage(NO_ADDITION));
-                  dispatch(billsSlice.actions.noUpdatePerson());
-                }}
-                variant="contained"
-              >
-                {NO_ADDITION}
-              </Button>
-            )}
-            {billState === BillState.Item && (
-              <Button
-                onClick={() => {
-                  setInput("");
-                  dispatch(billsSlice.actions.addUserMessage(THATS_ALL));
-                  dispatch(billsSlice.actions.finishItem());
-                }}
-                variant="contained"
-              >
-                {THATS_ALL}
-              </Button>
-            )}
-            {billState === BillState.ServiceTax &&
-              serviceTax.map((v) => (
-                <Button
-                  key={v}
-                  onClick={() => {
-                    setInput("");
-                    dispatch(billsSlice.actions.addUserMessage(`${v}%`));
-                    dispatch(billsSlice.actions.setServiceTax(v.toString()));
-                  }}
-                  variant="contained"
-                >
-                  {v}%
-                </Button>
-              ))}
-            {billState === BillState.GST &&
-              gst.map((v) => (
-                <Button
-                  key={v}
-                  onClick={() => {
-                    setInput("");
-                    dispatch(billsSlice.actions.addUserMessage(`${v}%`));
-                    dispatch(billsSlice.actions.setGST(v.toString()));
-                  }}
-                  variant="contained"
-                >
-                  {v}%
-                </Button>
-              ))}
-            {billState === BillState.Total && (
-              <>
-                <Button
-                  onClick={() => {
-                    dispatch(billsSlice.actions.addUserMessage(NEW_BILL));
-                    dispatch(billsSlice.actions.newBill());
-                  }}
-                  variant="contained"
-                >
-                  {NEW_BILL}
-                </Button>
-                <Button
-                  onClick={() => {
-                    dispatch(billsSlice.actions.addUserMessage(AMEND_BILL));
-                    dispatch(billsSlice.actions.amendBill());
-                  }}
-                  variant="contained"
-                >
-                  {AMEND_BILL}
-                </Button>
-              </>
             )}
           </form>
         </Grid>
