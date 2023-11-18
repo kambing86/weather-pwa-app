@@ -2,6 +2,18 @@ import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Decimal from "decimal.js";
 
 type Person = { name: string; price: number };
+type Message = { msg: string; isUser?: boolean };
+
+export enum BillState {
+  Init = "init",
+  Bill = "bill",
+  Update = "update",
+  Person = "person",
+  Item = "item",
+  ServiceTax = "serviceTax",
+  GST = "GST",
+  Total = "total",
+}
 
 type Bill = {
   name: string;
@@ -13,6 +25,7 @@ type Bill = {
 
 const BILLS_KEY = "bills";
 const WRONG_INPUT = "Wrong input";
+const WELCOME_MESSAGE = "Hi! What do you want to do today?";
 const BILL_NAME_MESSAGE = "What do you want to name your bill?";
 const NEXT_ITEM_MESSAGE =
   "Let me know the next bill item amount and who share this bill item.";
@@ -38,29 +51,30 @@ function getBillHistory() {
   return history;
 }
 
-export enum BillState {
-  Init = "init",
-  Bill = "bill",
-  Update = "update",
-  Person = "person",
-  Item = "item",
-  ServiceTax = "serviceTax",
-  GST = "GST",
-  Total = "total",
-}
-
 type State = Readonly<{
   index: number;
   history: Bill[];
   state: BillState;
-  messages: Array<{ msg: string; isUser?: boolean }>;
+  messages: Array<Message>;
+  currentBill: Bill;
 }>;
+
+function createNewBill(name?: string): Bill {
+  return {
+    name: name ?? "",
+    date: new Date().toUTCString(),
+    persons: [],
+    serviceTax: 0,
+    GST: 0,
+  };
+}
 
 const initialState: State = {
   index: -1,
   history: getBillHistory(),
-  state: BillState.Bill,
-  messages: [{ msg: BILL_NAME_MESSAGE }],
+  state: BillState.Init,
+  messages: [{ msg: WELCOME_MESSAGE }],
+  currentBill: createNewBill(),
 };
 
 const billsSlice = createSlice({
@@ -70,27 +84,24 @@ const billsSlice = createSlice({
     addUserMessage(state, action: PayloadAction<string>) {
       state.messages.push({ msg: action.payload, isUser: true });
     },
+    startOver(state) {
+      state.messages.push({ msg: WELCOME_MESSAGE });
+      state.state = BillState.Init;
+    },
     newBill(state) {
-      state.state = BillState.Bill;
       state.messages.push({ msg: BILL_NAME_MESSAGE });
+      state.state = BillState.Bill;
     },
     addBill(state, action: PayloadAction<string>) {
       const name = action.payload;
-      state.history.push({
-        name,
-        date: new Date().toUTCString(),
-        persons: [],
-        serviceTax: 0,
-        GST: 0,
-      });
-      state.index = state.history.length - 1;
-      state.state = BillState.Person;
+      state.currentBill = createNewBill(name);
       state.messages.push({
         msg: `OK, we'll name your bill "${name}".`,
       });
       state.messages.push({
         msg: getParticipantsMsg(),
       });
+      state.state = BillState.Person;
     },
     amendBill(state) {
       state.messages.push({
@@ -106,8 +117,7 @@ const billsSlice = createSlice({
       const uniqueSet = new Set(persons);
       if (persons.length !== uniqueSet.size)
         throw new Error("Cannot have duplicate name");
-      const index = state.index;
-      const currentBill = state.history[index];
+      const { currentBill } = state;
       const trimmed = persons.map((n) => n.trim());
       currentBill.persons = trimmed.map((name) => ({
         name: name,
@@ -123,8 +133,7 @@ const billsSlice = createSlice({
     },
     updatePersons(state, action: PayloadAction<string>) {
       const persons = action.payload.split(",");
-      const index = state.index;
-      const currentBill = state.history[index];
+      const { currentBill } = state;
       const trimmed = persons.map((n) => n.trim());
       for (const name of trimmed) {
         const found = currentBill.persons.find((p) => p.name === name);
@@ -159,8 +168,7 @@ const billsSlice = createSlice({
       const price = parseFloat(record.slice(0, firstSpaceIndex));
       if (Number.isNaN(price)) throw new Error(WRONG_INPUT);
 
-      const index = state.index;
-      const currentBill = state.history[index];
+      const { currentBill } = state;
       const currentPersons = currentBill.persons;
 
       const personsStr = record
@@ -195,8 +203,7 @@ const billsSlice = createSlice({
       });
     },
     finishItem(state) {
-      const index = state.index;
-      const currentBill = state.history[index];
+      const { currentBill } = state;
       state.messages.push({
         msg: `Great! Your bill subtotal is $${getSubTotal(currentBill).toFixed(
           2,
@@ -208,8 +215,7 @@ const billsSlice = createSlice({
       state.state = BillState.ServiceTax;
     },
     setServiceTax(state, action: PayloadAction<string>) {
-      const index = state.index;
-      const currentBill = state.history[index];
+      const { currentBill } = state;
       const serviceTax = parseFloat(action.payload);
       if (Number.isNaN(serviceTax)) throw new Error(WRONG_INPUT);
       currentBill.serviceTax = serviceTax;
@@ -224,8 +230,7 @@ const billsSlice = createSlice({
       state.state = BillState.GST;
     },
     setGST(state, action: PayloadAction<string>) {
-      const index = state.index;
-      const currentBill = state.history[index];
+      const { currentBill } = state;
       const gst = parseFloat(action.payload);
       if (Number.isNaN(gst)) throw new Error(WRONG_INPUT);
       currentBill.GST = gst;
@@ -236,6 +241,9 @@ const billsSlice = createSlice({
       });
       state.messages.push({
         msg: getFinalResponse(currentBill),
+      });
+      state.messages.push({
+        msg: "What would you like to do next?",
       });
       state.state = BillState.Total;
     },

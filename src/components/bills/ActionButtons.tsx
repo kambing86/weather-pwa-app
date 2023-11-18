@@ -9,8 +9,9 @@ const gst = [0, 7, 8, 9, 10, 11];
 
 const NO_ADDITION = "No addition";
 const THATS_ALL = "That's all";
-const NEW_BILL = "New Bill";
-const AMEND_BILL = "Amend Bill";
+const CREATE_BILL = "Create bill";
+const START_OVER = "Start over";
+const AMEND_BILL = "Amend bill";
 
 type Props = {
   onClick?: () => void;
@@ -21,6 +22,17 @@ const ActionButtons = ({ onClick }: Props) => {
   const dispatch = useDispatch();
   return (
     <>
+      {billState === BillState.Init && (
+        <Button
+          onClick={() => {
+            dispatch(billsSlice.actions.addUserMessage(CREATE_BILL));
+            dispatch(billsSlice.actions.newBill());
+          }}
+          variant="contained"
+        >
+          {CREATE_BILL}
+        </Button>
+      )}
       {billState === BillState.Update && (
         <Button
           onClick={() => {
@@ -77,12 +89,12 @@ const ActionButtons = ({ onClick }: Props) => {
         <>
           <Button
             onClick={() => {
-              dispatch(billsSlice.actions.addUserMessage(NEW_BILL));
-              dispatch(billsSlice.actions.newBill());
+              dispatch(billsSlice.actions.addUserMessage(START_OVER));
+              dispatch(billsSlice.actions.startOver());
             }}
             variant="contained"
           >
-            {NEW_BILL}
+            {START_OVER}
           </Button>
           <Button
             onClick={() => {

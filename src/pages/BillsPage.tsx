@@ -59,6 +59,8 @@ const BillsPage = () => {
   const clearInput = useCallback(() => {
     setInput("");
   }, []);
+  const showInput =
+    billState !== BillState.Init && billState !== BillState.Total;
   return (
     <Container maxWidth="lg" sx={{ flex: "1 0 auto", pt: 2 }}>
       <ErrorContainer error={error} clearError={clearError} />
@@ -71,7 +73,7 @@ const BillsPage = () => {
         <Grid item xs={12} sx={{ flex: "0 0 0 !important" }}>
           <form noValidate autoComplete="off" onSubmit={formSubmitHandler}>
             <ActionButtons onClick={clearInput} />
-            {billState !== BillState.Total && (
+            {showInput && (
               <FormControl fullWidth sx={{ mt: 2 }}>
                 <InputLabel>Input</InputLabel>
                 <Input value={input} onChange={inputChange} />
