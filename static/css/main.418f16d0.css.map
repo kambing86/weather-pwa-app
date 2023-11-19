@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.418f16d0.css","mappings":"AAAA,oCACE,6BAGE,wDACE,YCLN,KACE","sources":["layout/PWAPopup.module.scss","App.scss"],"sourcesContent":[".alert_align_center {\n  align-items: center !important;\n\n  :global {\n    .MuiButtonBase-root {\n      height: 100%;\n    }\n  }\n}\n","body {\n  overflow: hidden;\n}\n"],"names":[],"sourceRoot":""}
