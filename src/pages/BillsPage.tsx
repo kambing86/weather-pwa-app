@@ -27,7 +27,7 @@ const BillsPage = () => {
       const currentState = billStateRef.current;
       try {
         switch (currentState) {
-          case BillState.Bill:
+          case BillState.Create:
             dispatch(billsSlice.actions.addBill(inputText));
             break;
           case BillState.Person:
@@ -60,7 +60,9 @@ const BillsPage = () => {
     setInput("");
   }, []);
   const showInput =
-    billState !== BillState.Init && billState !== BillState.Total;
+    billState !== BillState.Init &&
+    billState !== BillState.View &&
+    billState !== BillState.Total;
   return (
     <Container maxWidth="lg" sx={{ flex: "1 0 auto", pt: 2 }}>
       <ErrorContainer error={error} clearError={clearError} />

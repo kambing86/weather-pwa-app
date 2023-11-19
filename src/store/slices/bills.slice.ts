@@ -1,12 +1,18 @@
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Decimal from "decimal.js";
+import moment from "moment";
+import { nanoid } from "nanoid";
+
+const BILLS_KEY = "bills";
+const maxHistory = 10;
 
 type Person = { name: string; price: number };
 type Message = { msg: string; isUser?: boolean };
 
 export enum BillState {
   Init = "init",
-  Bill = "bill",
+  Create = "create",
+  View = "view",
   Update = "update",
   Person = "person",
   Item = "item",
@@ -16,6 +22,7 @@ export enum BillState {
 }
 
 type Bill = {
+  id: string;
   name: string;
   date: string;
   persons: Person[];
@@ -23,7 +30,6 @@ type Bill = {
   GST: number;
 };
 
-const BILLS_KEY = "bills";
 const WRONG_INPUT = "Wrong input";
 const WELCOME_MESSAGE = "Hi! What do you want to do today?";
 const BILL_NAME_MESSAGE = "What do you want to name your bill?";
@@ -51,8 +57,16 @@ function getBillHistory() {
   return history;
 }
 
+function saveBillHistory(history: Bill[]) {
+  try {
+    localStorage.setItem(BILLS_KEY, JSON.stringify(history));
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+}
+
 type State = Readonly<{
-  index: number;
   history: Bill[];
   state: BillState;
   messages: Array<Message>;
@@ -61,6 +75,7 @@ type State = Readonly<{
 
 function createNewBill(name?: string): Bill {
   return {
+    id: nanoid(),
     name: name ?? "",
     date: new Date().toUTCString(),
     persons: [],
@@ -70,7 +85,6 @@ function createNewBill(name?: string): Bill {
 }
 
 const initialState: State = {
-  index: -1,
   history: getBillHistory(),
   state: BillState.Init,
   messages: [{ msg: WELCOME_MESSAGE }],
@@ -88,9 +102,23 @@ const billsSlice = createSlice({
       state.messages.push({ msg: WELCOME_MESSAGE });
       state.state = BillState.Init;
     },
+    viewBill(state) {
+      state.messages.push({ msg: showHistory(state.history) });
+      state.state = BillState.View;
+    },
+    selectBill(state, action: PayloadAction<number>) {
+      state.currentBill = state.history[action.payload];
+      state.messages.push({
+        msg: getFinalResponse(state.currentBill),
+      });
+      state.messages.push({
+        msg: "What would you like to do next?",
+      });
+      state.state = BillState.Total;
+    },
     newBill(state) {
       state.messages.push({ msg: BILL_NAME_MESSAGE });
-      state.state = BillState.Bill;
+      state.state = BillState.Create;
     },
     addBill(state, action: PayloadAction<string>) {
       const name = action.payload;
@@ -234,6 +262,8 @@ const billsSlice = createSlice({
       const gst = parseFloat(action.payload);
       if (Number.isNaN(gst)) throw new Error(WRONG_INPUT);
       currentBill.GST = gst;
+      pushToHistory(state.history, currentBill);
+      saveBillHistory(state.history);
       state.messages.push({
         msg: `Ok, the GST is ${gst}%. This equals to $${getGST(
           currentBill,
@@ -249,6 +279,31 @@ const billsSlice = createSlice({
     },
   },
 });
+
+function pushToHistory(history: Bill[], bill: Bill) {
+  const index = history.findIndex((b) => b.id === bill.id);
+  if (index >= 0) {
+    history.splice(index, 1, bill);
+  } else {
+    history.push(bill);
+  }
+  if (history.length > maxHistory) {
+    const deleteCount = history.length - maxHistory;
+    history.splice(0, deleteCount);
+  }
+}
+
+function showHistory(history: Bill[]) {
+  let messages = "Here are your recent bills:\n\n";
+  for (let index = 0; index < history.length; index++) {
+    const bill = history[index];
+    const isLastIndex = index === history.length - 1;
+    messages += `${index + 1}. ${bill.name}\n${moment(bill.date).fromNow()}${
+      isLastIndex ? "" : "\n\n"
+    }`;
+  }
+  return messages;
+}
 
 function getPersons(persons: Person[], personsStr: string) {
   const isAll = personsStr === "all";
