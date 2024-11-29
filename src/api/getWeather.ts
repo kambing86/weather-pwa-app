@@ -1,5 +1,9 @@
 import axios from "axios";
-import { AllWeatherData, LocationData } from "types/data";
+import type {
+  CurrentWeatherData,
+  ForecastData,
+  LocationData,
+} from "types/data";
 import { API_KEY } from "./common";
 
 const defaultParams = {
@@ -11,7 +15,7 @@ export const getLocations = async (
   city: string,
   options: { signal?: AbortSignal } = {},
 ) => {
-  const api = `https://api.openweathermap.org/geo/1.0/direct`;
+  const api = "https://api.openweathermap.org/geo/1.0/direct";
   return (
     await axios.get(api, {
       params: {
@@ -28,7 +32,7 @@ export const getLocationsByGeolocation = async (
   longitude: number,
   options: { signal?: AbortSignal } = {},
 ) => {
-  const api = `https://api.openweathermap.org/geo/1.0/reverse`;
+  const api = "https://api.openweathermap.org/geo/1.0/reverse";
   return (
     await axios.get(api, {
       params: {
@@ -41,21 +45,39 @@ export const getLocationsByGeolocation = async (
   ).data as LocationData[];
 };
 
-export const getAllWeatherDataByGeolocation = async (
+export const getWeatherDataByGeolocation = async (
   latitude: number,
   longitude: number,
   options: { signal?: AbortSignal } = {},
 ) => {
-  const api = `https://api.openweathermap.org/data/2.5/onecall`;
+  const api = "https://api.openweathermap.org/data/2.5/weather";
   return (
     await axios.get(api, {
       params: {
         ...defaultParams,
         lat: latitude,
         lon: longitude,
-        exclude: "minutely,hourly,alerts",
       },
       ...options,
     })
-  ).data as AllWeatherData;
+  ).data as CurrentWeatherData;
+};
+
+export const get7DaysForecastByGeolocation = async (
+  latitude: number,
+  longitude: number,
+  options: { signal?: AbortSignal } = {},
+) => {
+  const api = "https://api.openweathermap.org/data/2.5/forecast/daily";
+  return (
+    await axios.get(api, {
+      params: {
+        ...defaultParams,
+        lat: latitude,
+        lon: longitude,
+        cnt: 7,
+      },
+      ...options,
+    })
+  ).data as ForecastData;
 };

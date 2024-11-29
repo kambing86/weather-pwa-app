@@ -1,18 +1,28 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  getAllWeatherDataByGeolocation,
+  get7DaysForecastByGeolocation,
   getLocations,
   getLocationsByGeolocation,
+  getWeatherDataByGeolocation,
 } from "api/getWeather";
-import type { Coordinate } from "types/data";
+import type { AllData, Coordinate } from "types/data";
 
 export const getAllData = createAsyncThunk(
   "weather/getAllData",
   async (coordinate: Coordinate, { signal }) => {
     const { latitude, longitude } = coordinate;
-    return await getAllWeatherDataByGeolocation(latitude, longitude, {
+    const weatherPromise = getWeatherDataByGeolocation(latitude, longitude, {
       signal,
     });
+    const forecastPromise = get7DaysForecastByGeolocation(latitude, longitude, {
+      signal,
+    });
+    const current = await weatherPromise;
+    const forecast = await forecastPromise;
+    return {
+      current,
+      forecast,
+    } as AllData;
   },
 );
 
@@ -24,18 +34,18 @@ export const fetchLocations = createAsyncThunk(
     if (firstLocation == null)
       throw new Error(`Location ${location} not found`);
     const { lat: latitude, lon: longitude } = firstLocation;
-    const promise = dispatch(
+    const allDataThunk = dispatch(
       getAllData({
         latitude,
         longitude,
       }),
     );
     function abort() {
-      promise.abort();
+      allDataThunk.abort();
       signal.removeEventListener("abort", abort);
     }
     signal.addEventListener("abort", abort);
-    await promise;
+    await allDataThunk;
     return locations;
   },
 );

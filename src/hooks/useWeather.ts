@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "store";
-import {
-  useAllWeatherData,
-  useLocations,
-} from "store/selectors/weather.selectors";
+import type { AppDispatch } from "store";
+import { useAllData, useLocations } from "store/selectors/weather.selectors";
 import * as weatherThunk from "store/thunks/weather.thunks";
 
 export const useWeather = () => {
   const dispatch = useDispatch<AppDispatch>();
   const cancelCallback = useRef<(() => void) | null>(null);
-  const weatherData = useAllWeatherData();
+  const weatherData = useAllData();
   const locationsData = useLocations();
   const setLocation = useCallback(
     (location: string) => {

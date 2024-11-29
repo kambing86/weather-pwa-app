@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import { RootState } from "store";
+import type { RootState } from "store";
 
-export const useAllWeatherData = () => {
-  return useSelector((state: RootState) => state.weather.all);
+export const useAllData = () => {
+  return useSelector((state: RootState) => state.weather.allData);
 };
 
 export const useLocations = () => {

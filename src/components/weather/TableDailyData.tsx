@@ -12,7 +12,7 @@ import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { memo } from "react";
 import { DARK } from "store/slices/theme.slice";
-import type { DailyData } from "types/data";
+import type { ForecastData } from "types/data";
 import { DARK_RADIAL_GRADIENT, LIGHT_RADIAL_GRADIENT } from "./constants";
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -39,7 +39,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
 }));
 
 interface Props {
-  data: DailyData[];
+  data: ForecastData;
 }
 
 const TableDailyData = ({ data }: Props) => {
@@ -56,7 +56,7 @@ const TableDailyData = ({ data }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((dailyData) => {
+          {data.list.map((dailyData) => {
             const date = new Date(dailyData.dt * 1000);
             const weather = dailyData.weather[0];
             return (

@@ -78,7 +78,9 @@ const WeatherResult = () => {
           },
     [locationFromAPI, name],
   );
-  const currentData = weatherData.data?.current;
+  const allData = weatherData.data;
+  const currentData = allData?.current;
+  const forecastData = allData?.forecast;
   const locationRef = useRefInSync(location);
   const favoriteHandler = useCallback(() => {
     locationRef.current != null && clickFavorite(locationRef.current);
@@ -133,16 +135,16 @@ const WeatherResult = () => {
                   />
                   {currentData.weather[0].description}
                 </Typography>
-                <Typography>Temperature: {currentData.temp} °C</Typography>
+                <Typography>Temperature: {currentData.main.temp} °C</Typography>
               </>
             )}
             <Divider className={classes.divider} />
-            {weatherData.data && (
+            {forecastData && (
               <>
                 <Typography className={classes.tableTitle}>
                   7 days forecast
                 </Typography>
-                <TableDailyData data={weatherData.data.daily} />
+                <TableDailyData data={forecastData} />
               </>
             )}
           </>

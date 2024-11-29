@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  ThunkState,
+  type ThunkState,
   createInitialThunkState,
   handleThunk,
 } from "store/helpers/thunk";
@@ -9,15 +9,15 @@ import {
   fetchLocationsByGeolocation,
   getAllData,
 } from "store/thunks/weather.thunks";
-import type { AllWeatherData, LocationData } from "types/data";
+import type { AllData, LocationData } from "types/data";
 
 type WeatherState = {
-  all: ThunkState<AllWeatherData>;
+  allData: ThunkState<AllData>;
   locations: ThunkState<LocationData[]>;
 };
 
 const initialState: WeatherState = {
-  all: createInitialThunkState(),
+  allData: createInitialThunkState(),
   locations: createInitialThunkState(),
 };
 
@@ -26,7 +26,7 @@ const weatherSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    handleThunk(builder, getAllData, (state) => state.all);
+    handleThunk(builder, getAllData, (state) => state.allData);
     handleThunk(builder, fetchLocations, (state) => state.locations);
     handleThunk(
       builder,
