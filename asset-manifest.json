@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/weather-pwa-app/static/css/main.418f16d0.css",
+    "main.js": "/weather-pwa-app/static/js/main.01681a94.js",
+    "static/js/487.6b7ed39e.chunk.js": "/weather-pwa-app/static/js/487.6b7ed39e.chunk.js",
+    "static/js/332.34dde2ce.chunk.js": "/weather-pwa-app/static/js/332.34dde2ce.chunk.js",
+    "static/js/639.9324a109.chunk.js": "/weather-pwa-app/static/js/639.9324a109.chunk.js",
+    "static/js/298.11a6e075.chunk.js": "/weather-pwa-app/static/js/298.11a6e075.chunk.js",
+    "static/js/150.7509d3c3.chunk.js": "/weather-pwa-app/static/js/150.7509d3c3.chunk.js",
+    "static/js/488.7b2ecd99.chunk.js": "/weather-pwa-app/static/js/488.7b2ecd99.chunk.js",
+    "static/js/191.efc536c5.chunk.js": "/weather-pwa-app/static/js/191.efc536c5.chunk.js",
+    "static/js/69.28ff8ecf.chunk.js": "/weather-pwa-app/static/js/69.28ff8ecf.chunk.js",
+    "service-worker.js": "/weather-pwa-app/service-worker.js",
+    "index.html": "/weather-pwa-app/index.html",
+    "main.418f16d0.css.map": "/weather-pwa-app/static/css/main.418f16d0.css.map",
+    "main.01681a94.js.map": "/weather-pwa-app/static/js/main.01681a94.js.map",
+    "487.6b7ed39e.chunk.js.map": "/weather-pwa-app/static/js/487.6b7ed39e.chunk.js.map",
+    "332.34dde2ce.chunk.js.map": "/weather-pwa-app/static/js/332.34dde2ce.chunk.js.map",
+    "639.9324a109.chunk.js.map": "/weather-pwa-app/static/js/639.9324a109.chunk.js.map",
+    "298.11a6e075.chunk.js.map": "/weather-pwa-app/static/js/298.11a6e075.chunk.js.map",
+    "150.7509d3c3.chunk.js.map": "/weather-pwa-app/static/js/150.7509d3c3.chunk.js.map",
+    "488.7b2ecd99.chunk.js.map": "/weather-pwa-app/static/js/488.7b2ecd99.chunk.js.map",
+    "191.efc536c5.chunk.js.map": "/weather-pwa-app/static/js/191.efc536c5.chunk.js.map",
+    "69.28ff8ecf.chunk.js.map": "/weather-pwa-app/static/js/69.28ff8ecf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.418f16d0.css",
+    "static/js/main.01681a94.js"
+  ]
+}
