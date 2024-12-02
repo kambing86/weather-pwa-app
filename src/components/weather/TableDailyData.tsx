@@ -49,18 +49,25 @@ const TableDailyData = ({ data }: Props) => {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">Date / Time</TableCell>
             <TableCell align="center">Weather</TableCell>
+            <TableCell align="center">Precipitation (%)</TableCell>
             <TableCell align="center">Min temp (°C)</TableCell>
             <TableCell align="center">Max temp (°C)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.list.map((dailyData) => {
-            const weather = dailyData.weather[0];
+          {data.list.map((listData) => {
+            const date = new Date(listData.dt * 1000);
+            const weather = listData.weather[0];
             return (
-              <TableRow key={dailyData.dt}>
-                <TableCell align="center">{dailyData.dt_txt}</TableCell>
+              <TableRow key={listData.dt}>
+                <TableCell align="center">
+                  {new Intl.DateTimeFormat("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "full",
+                  }).format(date)}
+                </TableCell>
                 <TableCell align="center">
                   <Typography className={classes.weatherText}>
                     <img
@@ -71,8 +78,9 @@ const TableDailyData = ({ data }: Props) => {
                     {weather.description}
                   </Typography>
                 </TableCell>
-                <TableCell align="center">{dailyData.main.temp_max}</TableCell>
-                <TableCell align="center">{dailyData.main.temp_min}</TableCell>
+                <TableCell align="center">{`${listData.pop * 100}%`}</TableCell>
+                <TableCell align="center">{listData.main.temp_max}</TableCell>
+                <TableCell align="center">{listData.main.temp_min}</TableCell>
               </TableRow>
             );
           })}

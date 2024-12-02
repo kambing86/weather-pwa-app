@@ -107,7 +107,7 @@ export type ForecastData = {
     };
     visibility: number;
     pop: number;
-    rain: {
+    rain?: {
       "3h": number;
     };
     sys: {
