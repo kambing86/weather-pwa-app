@@ -68,14 +68,13 @@ export const get7DaysForecastByGeolocation = async (
   longitude: number,
   options: { signal?: AbortSignal } = {},
 ) => {
-  const api = "https://api.openweathermap.org/data/2.5/forecast/daily";
+  const api = "https://api.openweathermap.org/data/2.5/forecast";
   return (
     await axios.get(api, {
       params: {
         ...defaultParams,
         lat: latitude,
         lon: longitude,
-        cnt: 7,
       },
       ...options,
     })

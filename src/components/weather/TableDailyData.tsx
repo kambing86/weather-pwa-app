@@ -57,13 +57,10 @@ const TableDailyData = ({ data }: Props) => {
         </TableHead>
         <TableBody>
           {data.list.map((dailyData) => {
-            const date = new Date(dailyData.dt * 1000);
             const weather = dailyData.weather[0];
             return (
               <TableRow key={dailyData.dt}>
-                <TableCell align="center">
-                  {new Intl.DateTimeFormat().format(date)}
-                </TableCell>
+                <TableCell align="center">{dailyData.dt_txt}</TableCell>
                 <TableCell align="center">
                   <Typography className={classes.weatherText}>
                     <img
@@ -74,8 +71,8 @@ const TableDailyData = ({ data }: Props) => {
                     {weather.description}
                   </Typography>
                 </TableCell>
-                <TableCell align="center">{dailyData.temp.min}</TableCell>
-                <TableCell align="center">{dailyData.temp.max}</TableCell>
+                <TableCell align="center">{dailyData.main.temp_max}</TableCell>
+                <TableCell align="center">{dailyData.main.temp_min}</TableCell>
               </TableRow>
             );
           })}

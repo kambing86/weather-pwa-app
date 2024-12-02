@@ -142,7 +142,7 @@ const WeatherResult = () => {
             {forecastData && (
               <>
                 <Typography className={classes.tableTitle}>
-                  7 days forecast
+                  3 hours forecast
                 </Typography>
                 <TableDailyData data={forecastData} />
               </>
