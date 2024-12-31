@@ -1,8 +1,14 @@
 import Box from "@mui/material/Box";
-import { Theme } from "@mui/material/styles";
+import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import BillsPage from "pages/BillsPage";
-import { FavoritePage, HomePage, LocationPage, NotFoundPage } from "preload";
+import {
+  BillsPage,
+  FavoritePage,
+  HomePage,
+  LocationPage,
+  NotFoundPage,
+  NutritionPage,
+} from "preload";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Copyright from "./Copyright";
@@ -46,6 +52,7 @@ const MainLayout = () => {
             <Route path="/favorite" element={<FavoritePage />} />
             <Route path="/location/:location" element={<LocationPage />} />
             <Route path="/bills" element={<BillsPage />} />
+            <Route path="/nutrition" element={<NutritionPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

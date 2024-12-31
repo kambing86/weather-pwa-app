@@ -8,6 +8,7 @@ const SideBarLinkList = () => {
       <SideBarLink path="/" text="Home" icon="home" />
       <SideBarLink path="/favorite" text="Favorite" icon="favorite" />
       <SideBarLink path="/bills" text="Bills" icon="receipt" />
+      <SideBarLink path="/nutrition" text="Nutrition" icon="medication" />
     </List>
   );
 };

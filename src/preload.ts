@@ -24,4 +24,6 @@ export const ErrorPage = lazyWithPreload(() => import("pages/ErrorFallback"));
 export const HomePage = lazyWithPreload(() => import("pages/Home"));
 export const FavoritePage = lazyWithPreload(() => import("pages/Favorite"));
 export const LocationPage = lazyWithPreload(() => import("pages/Location"));
+export const BillsPage = lazyWithPreload(() => import("pages/Bills"));
+export const NutritionPage = lazyWithPreload(() => import("pages/Nutrition"));
 export const NotFoundPage = lazyWithPreload(() => import("pages/NotFound"));

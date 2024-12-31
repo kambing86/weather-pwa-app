@@ -3,12 +3,12 @@ import ActionButtons from "components/bills/ActionButtons";
 import ErrorContainer from "components/bills/ErrorContainer";
 import MessageList from "components/bills/MessageList";
 import { useRefInSync } from "hooks/helpers/useRefInSync";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import { type ChangeEvent, type FormEvent, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "store";
+import type { RootState } from "store";
 import billsSlice, { BillState } from "store/slices/bills.slice";
 
-const BillsPage = () => {
+const Bills = () => {
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRefInSync(input);
@@ -88,4 +88,4 @@ const BillsPage = () => {
   );
 };
 
-export default BillsPage;
+export default Bills;

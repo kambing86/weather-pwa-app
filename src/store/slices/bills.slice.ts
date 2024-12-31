@@ -181,7 +181,7 @@ const billsSlice = createSlice({
     },
     noUpdatePerson(state) {
       state.messages.push({
-        msg: `Ok, no additional participants.`,
+        msg: "Ok, no additional participants.",
       });
       state.messages.push({
         msg: `${NEXT_ITEM_MESSAGE}\n${ITEM_EXAMPLE}`,
@@ -193,7 +193,7 @@ const billsSlice = createSlice({
       const firstSpaceIndex = record.indexOf(" ");
       if (firstSpaceIndex === -1) throw new Error(WRONG_INPUT);
 
-      const price = parseFloat(record.slice(0, firstSpaceIndex));
+      const price = Number.parseFloat(record.slice(0, firstSpaceIndex));
       if (Number.isNaN(price)) throw new Error(WRONG_INPUT);
 
       const { currentBill } = state;
@@ -238,13 +238,13 @@ const billsSlice = createSlice({
         )}.`,
       });
       state.messages.push({
-        msg: `How much is the service charge?`,
+        msg: "How much is the service charge?",
       });
       state.state = BillState.ServiceTax;
     },
     setServiceTax(state, action: PayloadAction<string>) {
       const { currentBill } = state;
-      const serviceTax = parseFloat(action.payload);
+      const serviceTax = Number.parseFloat(action.payload);
       if (Number.isNaN(serviceTax)) throw new Error(WRONG_INPUT);
       currentBill.serviceTax = serviceTax;
       state.messages.push({
@@ -253,13 +253,13 @@ const billsSlice = createSlice({
         ).toFixed(2)}.`,
       });
       state.messages.push({
-        msg: `How much is the GST?`,
+        msg: "How much is the GST?",
       });
       state.state = BillState.GST;
     },
     setGST(state, action: PayloadAction<string>) {
       const { currentBill } = state;
-      const gst = parseFloat(action.payload);
+      const gst = Number.parseFloat(action.payload);
       if (Number.isNaN(gst)) throw new Error(WRONG_INPUT);
       currentBill.GST = gst;
       pushToHistory(state.history, currentBill);
