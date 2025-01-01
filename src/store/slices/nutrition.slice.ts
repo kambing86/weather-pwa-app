@@ -84,7 +84,10 @@ const nutritionSlice = createSlice({
       saveHistory(state.history);
     },
     loadHistory(state, action: PayloadAction<number>) {
-      state.current = state.history.at(action.payload);
+      const index = action.payload;
+      if (Number.isNaN(index) || state.history.at(index) == null)
+        nutritionSlice.caseReducers.newEntry(state);
+      else state.current = state.history.at(action.payload);
     },
   },
 });
