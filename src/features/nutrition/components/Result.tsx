@@ -11,10 +11,11 @@ import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { supplements } from "../constants";
 import questions from "../questions";
 import CustomTableCell from "./CustomTableCell";
+import Gender from "./Gender";
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {
@@ -23,6 +24,11 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
   paper: {
     padding: theme.spacing(2),
+  },
+  inputArea: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(2),
   },
   table: {
     userSelect: "none",
@@ -37,19 +43,21 @@ const Result = () => {
   );
 
   return (
-    <Container maxWidth="lg" className={classes.container}>
+    <Container maxWidth="xl" className={classes.container}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper elevation={2} className={classes.paper}>
-            <TextField label="名字" variant="outlined" />
+            <div className={classes.inputArea}>
+              <TextField label="名字" variant="outlined" />
+              <TextField label="年龄" variant="outlined" />
+              <Gender />
+            </div>
             <TableContainer component={Paper}>
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
                     <CustomTableCell>打勾</CustomTableCell>
-                    <CustomTableCell style={{ minWidth: "50rem" }}>
-                      身体状况评表
-                    </CustomTableCell>
+                    <CustomTableCell style={{ minWidth: "50rem" }} />
                     {supplements.map((s) => (
                       <CustomTableCell key={s} align="center">
                         {s}
@@ -58,46 +66,72 @@ const Result = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  <TableRow>
+                    <CustomTableCell
+                      colSpan={2 + supplements.length}
+                      style={{
+                        background: theme.palette.text.secondary,
+                        color: theme.palette.primary.contrastText,
+                      }}
+                    >
+                      身体状况评表
+                    </CustomTableCell>
+                  </TableRow>
                   {questions.map((q, index) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: is ok to use index here
-                    <TableRow key={index}>
-                      <CustomTableCell>
-                        <Checkbox
-                          checked={answer.at(index) ?? false}
-                          onChange={(e) => {
-                            setAnswer((old) => {
-                              return old.map((a, i) => {
-                                if (i === index) {
-                                  return e.target.checked;
-                                }
-                                return a;
+                    <Fragment key={index}>
+                      <TableRow>
+                        <CustomTableCell>
+                          <Checkbox
+                            checked={answer.at(index) ?? false}
+                            onChange={(e) => {
+                              setAnswer((old) => {
+                                return old.map((a, i) => {
+                                  if (i === index) {
+                                    return e.target.checked;
+                                  }
+                                  return a;
+                                });
                               });
-                            });
-                          }}
-                        />
-                      </CustomTableCell>
-                      <CustomTableCell>
-                        {index + 1} {q.text}
-                      </CustomTableCell>
-                      {supplements.map((s) => {
-                        const counted = q.supplements.includes(s);
-                        const isChecked = answer.at(index) ?? false;
-                        return (
+                            }}
+                          />
+                        </CustomTableCell>
+                        <CustomTableCell>
+                          {index + 1} {q.text}
+                        </CustomTableCell>
+                        {supplements.map((s) => {
+                          const counted = q.supplements.includes(s);
+                          const isChecked = answer.at(index) ?? false;
+                          return (
+                            <CustomTableCell
+                              key={s}
+                              align="center"
+                              style={{
+                                background: counted
+                                  ? undefined
+                                  : theme.palette.action.disabledBackground,
+                                color: theme.palette.primary.contrastText,
+                              }}
+                            >
+                              {counted && isChecked ? "1" : ""}
+                            </CustomTableCell>
+                          );
+                        })}
+                      </TableRow>
+                      {index === 36 && (
+                        <TableRow>
                           <CustomTableCell
-                            key={s}
-                            align="center"
+                            colSpan={2 + supplements.length}
                             style={{
-                              background: counted
-                                ? theme.palette.primary.main
-                                : theme.palette.text.disabled,
+                              background: theme.palette.text.secondary,
                               color: theme.palette.primary.contrastText,
                             }}
                           >
-                            {counted && isChecked ? "1" : ""}
+                            生活习惯
                           </CustomTableCell>
-                        );
-                      })}
-                    </TableRow>
+                        </TableRow>
+                      )}
+                    </Fragment>
                   ))}
                   <TableRow>
                     <CustomTableCell>总分</CustomTableCell>
