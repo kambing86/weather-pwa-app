@@ -25,14 +25,14 @@ function getHistory() {
   return history;
 }
 
-function saveHistory(history: NutritionEntry[]) {
-  try {
-    localStorage.setItem(NUTRITION_KEY, JSON.stringify(history));
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-  }
-}
+// function saveHistory(history: NutritionEntry[]) {
+//   try {
+//     localStorage.setItem(NUTRITION_KEY, JSON.stringify(history));
+//   } catch (error) {
+//     // eslint-disable-next-line no-console
+//     console.error(error);
+//   }
+// }
 
 interface State {
   history: NutritionEntry[];
@@ -81,7 +81,7 @@ const nutritionSlice = createSlice({
         state.history.push(state.current);
       else state.history[index] = state.current;
       state.current = undefined;
-      saveHistory(state.history);
+      // saveHistory(state.history);
     },
     loadHistory(state, action: PayloadAction<number>) {
       const index = action.payload;
