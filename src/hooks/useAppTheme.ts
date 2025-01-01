@@ -19,7 +19,7 @@ const getTheme = (themeMode: Palette["mode"] | null) => {
 // else will change the theme based on the machine dark mode
 export const useAppTheme = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const themeMode = useSelector((state: RootState) => state.theme);
+  const themeMode = useSelector((state: RootState) => state.theme.mode);
   const [theme, setTheme] = useState(getTheme(themeMode));
   const dispatch = useDispatch();
   const toggleDarkMode = useCallback(() => {
