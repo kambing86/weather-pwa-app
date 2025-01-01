@@ -110,7 +110,6 @@ const Result = () => {
                                 background: counted
                                   ? undefined
                                   : theme.palette.action.disabledBackground,
-                                color: theme.palette.primary.contrastText,
                               }}
                             >
                               {counted && isChecked ? "1" : ""}
