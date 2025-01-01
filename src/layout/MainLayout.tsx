@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
+import RedirectHome from "components/RedirectHome";
 import {
   BillsPage,
   FavoritePage,
@@ -48,11 +49,12 @@ const MainLayout = () => {
         <div className={classes.contentWrapper}>
           <div className={classes.appBarSpacer} />
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route index element={<RedirectHome />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/favorite" element={<FavoritePage />} />
             <Route path="/location/:location" element={<LocationPage />} />
             <Route path="/bills" element={<BillsPage />} />
-            <Route path="/nutrition" element={<NutritionPage />} />
+            <Route path="/nutrition/*" element={<NutritionPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

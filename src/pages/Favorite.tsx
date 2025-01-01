@@ -4,7 +4,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
-import { Theme } from "@mui/material/styles";
+import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import CountryFlag from "components/weather/CountryFlag";
 import { type TCountryCode, getCountryData } from "countries-list";

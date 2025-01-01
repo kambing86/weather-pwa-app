@@ -28,17 +28,14 @@ const themeSlice = createSlice({
   reducers: {
     setTitle(state, action: PayloadAction<string>) {
       state.title.push(action.payload);
-      return state;
     },
     removeTitle(state) {
       state.title.pop();
-      return state;
     },
     toggleTheme(state) {
       const newVal = state.mode === DARK ? LIGHT : DARK;
       localStorage.setItem(THEME_KEY, newVal);
       state.mode = newVal;
-      return state;
     },
   },
 });

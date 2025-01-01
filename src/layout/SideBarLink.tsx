@@ -16,7 +16,7 @@ const SideBarLink = ({ path, text, icon }: Props) => {
   const clickHandler = useCallback(() => {
     pushHistory(path);
   }, [path, pushHistory]);
-  const isCurrentPath = location.pathname === path;
+  const isCurrentPath = location.pathname.includes(path);
   return (
     <ListItem button onClick={clickHandler} selected={isCurrentPath}>
       <ListItemIcon>
