@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkweather_pwa_app=self.webpackChunkweather_pwa_app||[]).push([[150],{7150:(e,t,n)=>{n.r(t),n.d(t,{default:()=>s});var a=n(8903),h=n(5865),r=n(579);const s=()=>(0,r.jsx)(a.Ay,{container:!0,alignContent:"center",justifyContent:"center",style:{height:"100vh"},children:(0,r.jsx)(h.A,{variant:"h3",children:"Page Not Found"})})}}]);
+//# sourceMappingURL=150.7509d3c3.chunk.js.map

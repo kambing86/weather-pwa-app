@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkweather_pwa_app=self.webpackChunkweather_pwa_app||[]).push([[487],{5487:(e,r,n)=>{n.r(r),n.d(r,{default:()=>s});var a=n(579);const s=e=>{let{error:r,resetErrorBoundary:n}=e;return(0,a.jsxs)("div",{role:"alert",children:[(0,a.jsx)("p",{children:"Something went wrong:"}),(0,a.jsx)("pre",{children:null===r||void 0===r?void 0:r.message}),(0,a.jsx)("button",{onClick:n,children:"Try again"})]})}}}]);
+//# sourceMappingURL=487.6b7ed39e.chunk.js.map
