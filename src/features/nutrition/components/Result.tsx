@@ -6,16 +6,17 @@ import nutritionSlice from "store/slices/nutrition.slice";
 import ResultContent from "./ResultContent";
 
 const Result = () => {
+  const ready = useSelector((state: RootState) => state.nutrition.ready);
   const current = useSelector((state: RootState) => state.nutrition.current);
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams();
   const indexParam = Number.parseInt(params["*"] ?? "");
 
   useEffect(() => {
-    if (current == null) {
+    if (ready && current == null) {
       dispatch(nutritionSlice.actions.loadHistory(indexParam));
     }
-  }, [current, indexParam, dispatch]);
+  }, [ready, current, indexParam, dispatch]);
 
   if (current == null) return null;
 

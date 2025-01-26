@@ -1,8 +1,11 @@
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -44,16 +47,31 @@ const EntryList = () => {
                 <ListItem
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={index}
-                  button
-                  onClick={() => {
-                    dispatch(nutritionSlice.actions.loadHistory(index));
-                    navigate(`/nutrition/result/${index}`);
-                  }}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => {
+                        if (window.confirm(`你确定删除${h.name}的记录吗？`)) {
+                          dispatch(nutritionSlice.actions.removeHistory(index));
+                        }
+                      }}
+                    >
+                      <Icon>delete</Icon>
+                    </IconButton>
+                  }
                 >
-                  <ListItemText
-                    primary={h.name}
-                    secondary={moment(h.date).format("YYYY-MM-DD HH:mm:ss")}
-                  />
+                  <ListItemButton
+                    onClick={() => {
+                      dispatch(nutritionSlice.actions.loadHistory(index));
+                      navigate(`/nutrition/result/${index}`);
+                    }}
+                  >
+                    <ListItemText
+                      primary={h.name}
+                      secondary={moment(h.date).format("YYYY-MM-DD HH:mm:ss")}
+                    />
+                  </ListItemButton>
                 </ListItem>
               ))}
             </List>

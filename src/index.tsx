@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import store from "store";
 import { updateActions } from "store/actions/update.actions";
+import nutritionSlice, { getHistory } from "store/slices/nutrition.slice";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
@@ -30,3 +31,8 @@ serviceWorkerRegistration.register({
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+void (async () => {
+  const history = await getHistory();
+  store.dispatch(nutritionSlice.actions.setHistory(history));
+})();

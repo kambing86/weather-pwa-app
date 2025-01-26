@@ -25,7 +25,7 @@ const Question = ({ index }: Props) => {
     <>
       <CustomTableCell>
         <Checkbox
-          checked={answer ?? false}
+          checked={answer === 1}
           onChange={(e) => {
             dispatch(
               nutritionSlice.actions.setAnswer({
