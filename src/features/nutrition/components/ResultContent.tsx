@@ -21,9 +21,20 @@ const useStyles = makeStyles<Theme>((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    flex: 1,
+  },
+  gridContainer: {
+    height: "100%",
   },
   paper: {
     padding: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+  },
+  tableContainer: {
+    flex: "1 1 0",
+    minHeight: 200,
   },
   table: {
     userSelect: "none",
@@ -36,11 +47,14 @@ const ResultContent = () => {
 
   return (
     <Container maxWidth="xl" className={classes.container}>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} className={classes.gridContainer}>
         <Grid item xs={12}>
           <Paper elevation={2} className={classes.paper}>
             <ResultInputArea />
-            <TableContainer component={Paper}>
+            <TableContainer
+              component={Paper}
+              className={classes.tableContainer}
+            >
               <Table className={classes.table}>
                 <ResultTableHead />
                 <TableBody>
