@@ -4,6 +4,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useRoute } from "hooks/helpers/useRoute";
 import React, { useCallback } from "react";
+import { EventType, eventBus } from "utils/eventBus";
 
 interface Props {
   path: string;
@@ -15,6 +16,7 @@ const SideBarLink = ({ path, text, icon }: Props) => {
   const { pushHistory, location } = useRoute();
   const clickHandler = useCallback(() => {
     pushHistory(path);
+    eventBus.dispatch(EventType.CLOSE_SIDE_BAR);
   }, [path, pushHistory]);
   const isCurrentPath = location.pathname.includes(path);
   return (

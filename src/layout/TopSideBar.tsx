@@ -2,9 +2,11 @@ import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
+import { permanantSideBar } from "features";
 import { useAppTheme } from "hooks/useAppTheme";
 import React, { useCallback, useState } from "react";
 import { LIGHT } from "store/slices/theme.slice";
+import { EventType, useEventBus } from "utils/eventBus";
 import AppBar from "./AppBar";
 import Drawer from "./Drawer";
 import SideBarLinkList from "./SideBarLinkList";
@@ -19,6 +21,11 @@ const TopSideBar = () => {
     setIsOpen(false);
   }, []);
   const { theme, toggleDarkMode } = useAppTheme();
+
+  useEventBus(EventType.CLOSE_SIDE_BAR, () => {
+    setIsOpen(false);
+  });
+
   return (
     <>
       <AppBar position="absolute" open={isOpen}>
@@ -49,7 +56,10 @@ const TopSideBar = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={isOpen}>
+      <Drawer
+        variant={permanantSideBar ? "permanent" : undefined}
+        open={isOpen}
+      >
         <Toolbar
           sx={{
             display: "flex",
